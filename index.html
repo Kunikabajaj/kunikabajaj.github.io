@@ -455,7 +455,7 @@ main { overflow-x: clip; }
 .t-big { font: 800 clamp(34px, 8.5vw, 120px) 'Unbounded', sans-serif; text-transform: uppercase; }
 .t-huge { font: 800 clamp(54px, 13vw, 200px) 'Unbounded', sans-serif; text-transform: uppercase; letter-spacing: -.02em; }
 .t-script { font: 400 clamp(46px, 10vw, 150px) 'Caveat Brush', cursive; color: var(--i-hot); line-height: .8; }
-/* A few lines ("Is it a bad thing?", "You‚Äôre staring at the") run 4% larger than the standard sizes */
+/* A few lines ("Is it a bad thing?", "You’re staring at the") run 4% larger than the standard sizes */
 .t-small.up4 { font-size: calc(clamp(20px, 3.2vw, 36px) * 1.04); }
 .t-geo.up4 { font-size: calc(clamp(34px, 6.5vw, 92px) * 1.04); }
 .t-outline { color: transparent; -webkit-text-stroke: clamp(1.5px, .25vw, 3px) var(--i-ink); }
@@ -632,7 +632,7 @@ main { overflow-x: clip; }
     <div class="hero-grid">
       <div class="hero-copy">
         <h1>Up late, <em>designing</em> things.</h1>
-        <p class="lede">I‚Äôm Kunika, a hands-on product designer. From the first user interview to the last perfect pixel, I enjoy every part of the craft. AI helps me go from idea to working prototype in hours, not weeks, so I can spend more time on the details that make a product feel awesome.</p>
+        <p class="lede">I’m Kunika, a hands-on product designer. From the first user interview to the last perfect pixel, I enjoy every part of the craft. AI helps me go from idea to working prototype in hours, not weeks, so I can spend more time on the details that make a product feel awesome.</p>
       </div>
 
       <div class="playground" id="playground">
@@ -642,7 +642,7 @@ main { overflow-x: clip; }
               <span class="glow"></span>
               <svg class="ring" viewBox="0 0 200 200">
                 <defs><path id="ringPath" d="M100 100m-90 0a90 90 0 1 1 180 0a90 90 0 1 1-180 0"/></defs>
-                <text><textPath href="#ringPath" textLength="560">KUNIKA ‚ú¶ PRODUCT DESIGNER ‚ú¶ KUNIKA ‚ú¶ PRODUCT DESIGNER ‚ú¶</textPath></text>
+                <text><textPath href="#ringPath" textLength="560">KUNIKA ✦ PRODUCT DESIGNER ✦ KUNIKA ✦ PRODUCT DESIGNER ✦</textPath></text>
               </svg>
             </span>
             <img src="assets/kunika-3d.webp" alt="3D illustration of Kunika in a lilac hoodie, making a peace sign" width="1000" height="1294">
@@ -977,7 +977,7 @@ function stepStickers(now, dt) {
       const stiff = s.dragging ? .22 : .09;
       [s.x, s.vx] = spring(s.x, s.vx, home.x + s.pull.x, stiff, .74, dt);
       [s.y, s.vy] = spring(s.y, s.vy, home.y + s.pull.y, stiff, .74, dt);
-      // Tuned so a turn lands in ~350ms, overshoots ~16¬∞ and settles within a second
+      // Tuned so a turn lands in ~350ms, overshoots ~16° and settles within a second
       [s.rot, s.vr] = spring(s.rot, s.vr, s.turns * 360 + s.pull.x * .35, .022, .82, dt);
       [s.scale, s.vs] = spring(s.scale, s.vs, 1, .1, .76, dt);
       // Once a spin has settled, fold the whole turns away so the numbers stay small
@@ -1205,7 +1205,7 @@ function runIntro() {
       <g class="display">
         <g class="eye">${pixels(117)}</g><g class="eye">${pixels(229)}</g>
         <g class="pupils"><rect class="pupil" x="111" y="96" width="12" height="40" rx="2"/><rect class="pupil" x="223" y="96" width="12" height="40" rx="2"/></g>
-        <text class="readout" x="180" y="182" text-anchor="middle">08<tspan class="colon">:</tspan>47 AM ¬∑ LATE</text>
+        <text class="readout" x="180" y="182" text-anchor="middle">08<tspan class="colon">:</tspan>47 AM · LATE</text>
       </g>`;
     return svg;
   };
@@ -1383,7 +1383,7 @@ function runIntro() {
       camSet({ x: c.x, y: c.y, z: fit * .5, r: 0 });
       camTo({ z: fit }, 750, ease.land).then(() => camTo({ z: fit * 1.06 }, 1400, ease.glide));
     } },
-    { ms: 800, run: () => look(place([word('You‚Äôre staring at the', 't-small up4', 'type')], { dx: 0, dy: 70 }), 600, ease.glide, { z: 1 }) },
+    { ms: 800, run: () => look(place([word('You’re staring at the', 't-small up4', 'type')], { dx: 0, dy: 70 }), 600, ease.glide, { z: 1 }) },
     // tilt the camera up to the ceiling
     { ms: 2000, run: () => {
       const c = place([ceiling('CEILING.')], { dx: 0, dy: -150 });
