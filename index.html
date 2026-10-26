@@ -271,17 +271,6 @@ main { overflow-x: clip; }
 .sticker:hover .lift, .sticker:focus-visible .lift { transform: scale(1.06) rotate(-3deg); }
 .sticker.dragging .lift { transform: scale(1.1); }
 .sticker:focus-visible { outline-offset: 8px; border-radius: 28px; }
-.sticker.found::after {
-  content: ''; position: absolute; right: 2px; top: 2px;
-  width: 12px; height: 12px; border-radius: 50%;
-  background: var(--mint); border: 2px solid #fff;
-}
-.sticker.active .lift { transform: scale(1.12); }
-.sticker.active::before {
-  content: ''; position: absolute; inset: -10px; border-radius: 50%;
-  border: 2px dashed rgba(255, 255, 255, .8);
-  animation: spin 8s linear infinite;
-}
 @keyframes bob {
   0%, 100% { transform: translateY(0) rotate(0deg); }
   50% { transform: translateY(-4px) rotate(1.2deg); }
@@ -305,22 +294,8 @@ main { overflow-x: clip; }
 .bubble.below.show { transform: translate(-50%, 14px) scale(1); }
 .bubble cite { display: block; margin-top: 6px; font-style: normal; font-weight: 500; font-size: .85rem; color: #5b5785; }
 
-/* Sketch layer and mode pill */
+/* Confetti layer */
 #fx { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 15; pointer-events: none; }
-.hero.sketching #fx { pointer-events: auto; cursor: crosshair; }
-.mode-pill {
-  position: fixed; left: 50%; bottom: 24px; z-index: 70;
-  transform: translate(-50%, calc(100% + 40px));
-  visibility: hidden;
-  display: flex; align-items: center; white-space: nowrap;
-  padding: 8px 8px 8px 20px; border-radius: 999px;
-  background: #fff; color: var(--night); font-weight: 600; font-size: .95rem;
-  box-shadow: 0 16px 34px -12px rgba(0, 0, 0, .6);
-  transition: transform .35s cubic-bezier(.3, 1.4, .5, 1), visibility 0s .35s;
-}
-.mode-pill.show { transform: translate(-50%, 0); visibility: visible; transition-delay: 0s; }
-.mode-pill button { margin-left: 10px; border: 0; background: var(--night); color: #fff; font: 600 .85rem var(--body); padding: 6px 12px; border-radius: 999px; cursor: pointer; }
-
 /* ---------- Marquee band ---------- */
 .band {
   overflow: hidden;
@@ -480,7 +455,7 @@ main { overflow-x: clip; }
 .t-big { font: 800 clamp(34px, 8.5vw, 120px) 'Unbounded', sans-serif; text-transform: uppercase; }
 .t-huge { font: 800 clamp(54px, 13vw, 200px) 'Unbounded', sans-serif; text-transform: uppercase; letter-spacing: -.02em; }
 .t-script { font: 400 clamp(46px, 10vw, 150px) 'Caveat Brush', cursive; color: var(--i-hot); line-height: .8; }
-/* A few lines ("Is it a bad thing?", "You’re staring at the") run 4% larger than the standard sizes */
+/* A few lines ("Is it a bad thing?", "You‚Äôre staring at the") run 4% larger than the standard sizes */
 .t-small.up4 { font-size: calc(clamp(20px, 3.2vw, 36px) * 1.04); }
 .t-geo.up4 { font-size: calc(clamp(34px, 6.5vw, 92px) * 1.04); }
 .t-outline { color: transparent; -webkit-text-stroke: clamp(1.5px, .25vw, 3px) var(--i-ink); }
@@ -657,7 +632,7 @@ main { overflow-x: clip; }
     <div class="hero-grid">
       <div class="hero-copy">
         <h1>Up late, <em>designing</em> things.</h1>
-        <p class="lede">I’m Kunika, a hands-on product designer. From the first user interview to the last perfect pixel, I enjoy every part of the craft. AI helps me go from idea to working prototype in hours, not weeks, so I can spend more time on the details that make a product feel awesome.</p>
+        <p class="lede">I‚Äôm Kunika, a hands-on product designer. From the first user interview to the last perfect pixel, I enjoy every part of the craft. AI helps me go from idea to working prototype in hours, not weeks, so I can spend more time on the details that make a product feel awesome.</p>
       </div>
 
       <div class="playground" id="playground">
@@ -667,7 +642,7 @@ main { overflow-x: clip; }
               <span class="glow"></span>
               <svg class="ring" viewBox="0 0 200 200">
                 <defs><path id="ringPath" d="M100 100m-90 0a90 90 0 1 1 180 0a90 90 0 1 1-180 0"/></defs>
-                <text><textPath href="#ringPath" textLength="560">KUNIKA ✦ PRODUCT DESIGNER ✦ KUNIKA ✦ PRODUCT DESIGNER ✦</textPath></text>
+                <text><textPath href="#ringPath" textLength="560">KUNIKA ‚ú¶ PRODUCT DESIGNER ‚ú¶ KUNIKA ‚ú¶ PRODUCT DESIGNER ‚ú¶</textPath></text>
               </svg>
             </span>
             <img src="assets/kunika-3d.webp" alt="3D illustration of Kunika in a lilac hoodie, making a peace sign" width="1000" height="1294">
@@ -746,16 +721,13 @@ main { overflow-x: clip; }
   </section>
 </main>
 
-<div class="mode-pill" id="modePill" role="status">Sketch mode is on <button type="button" id="stopSketch">Stop</button></div>
 
 <script>
 /* ============================================================
-   Edit these to make the stickers yours
+   Edit these to make the page yours
    ============================================================ */
 const CONFIG = {
   hello: "Hi, I'm Kunika. Have a look around.",
-  reading: 'Currently reading: [your book]',
-  roaming: 'Always looking for the next unexplored place.',
   marquee: ['Product design', 'Design systems', 'User flows', 'Brand identity'],
 };
 
@@ -860,10 +832,9 @@ function drawStars(t) {
   sctx.globalAlpha = 1;
 }
 
-/* ---------- Sketch + confetti layer ---------- */
+/* ---------- Confetti layer ---------- */
 const fx = $('#fx');
 const fctx = fx.getContext('2d');
-let strokes = [];      // { pts: [{x, y, t}] }
 let particles = [];
 function sizeFx() {
   const dpr = Math.min(devicePixelRatio || 1, 2);
@@ -873,19 +844,6 @@ function sizeFx() {
 }
 function drawFx(now) {
   fctx.clearRect(0, 0, hero.clientWidth, hero.clientHeight);
-  const ink = getComputedStyle(document.documentElement).getPropertyValue('--pink').trim() || '#ff5fcf';
-  fctx.lineCap = 'round'; fctx.lineJoin = 'round'; fctx.lineWidth = 5;
-  strokes = strokes.filter((s) => s.live || now - s.pts[s.pts.length - 1].t < 3500);
-  for (const s of strokes) {
-    for (let i = 1; i < s.pts.length; i++) {
-      const p = s.pts[i], q = s.pts[i - 1];
-      const age = s.live ? 0 : now - s.pts[s.pts.length - 1].t;
-      fctx.globalAlpha = Math.max(0, 1 - age / 3500);
-      fctx.strokeStyle = ink;
-      fctx.beginPath(); fctx.moveTo(q.x, q.y); fctx.lineTo(p.x, p.y); fctx.stroke();
-    }
-  }
-  fctx.globalAlpha = 1;
   particles = particles.filter((p) => p.life > 0);
   for (const p of particles) {
     p.x += p.vx; p.y += p.vy; p.vy += .25; p.vx *= .99; p.rot += p.vr; p.life -= 1;
@@ -909,33 +867,11 @@ function burst(x, y) {
       rot: Math.random() * 6, vr: (Math.random() - .5) * .3, c: colors[i % colors.length], life: 90 + Math.random() * 40 });
   }
 }
-let sketching = false;
-let drawingStroke = null;
+// Pointer position relative to the hero (used for dragging stickers)
 function heroPoint(e) {
   const r = hero.getBoundingClientRect();
   return { x: e.clientX - r.left, y: e.clientY - r.top };
 }
-fx.addEventListener('pointerdown', (e) => {
-  if (!sketching) return;
-  fx.setPointerCapture(e.pointerId);
-  drawingStroke = { live: true, pts: [{ ...heroPoint(e), t: performance.now() }] };
-  strokes.push(drawingStroke);
-});
-fx.addEventListener('pointermove', (e) => {
-  if (drawingStroke) drawingStroke.pts.push({ ...heroPoint(e), t: performance.now() });
-});
-const endStroke = () => { if (drawingStroke) { drawingStroke.live = false; drawingStroke = null; } };
-fx.addEventListener('pointerup', endStroke);
-fx.addEventListener('pointercancel', endStroke);
-
-function setSketching(on) {
-  sketching = on;
-  hero.classList.toggle('sketching', on);
-  $('#modePill').classList.toggle('show', on);
-  stickerByKind.pencil.el.classList.toggle('active', on);
-}
-$('#stopSketch').addEventListener('click', () => setSketching(false));
-addEventListener('keydown', (e) => { if (e.key === 'Escape' && sketching) setSketching(false); });
 
 /* ---------- Stickers ---------- */
 const stickers = STICKERS.map((cfg, i) => {
@@ -1041,7 +977,7 @@ function stepStickers(now, dt) {
       const stiff = s.dragging ? .22 : .09;
       [s.x, s.vx] = spring(s.x, s.vx, home.x + s.pull.x, stiff, .74, dt);
       [s.y, s.vy] = spring(s.y, s.vy, home.y + s.pull.y, stiff, .74, dt);
-      // Tuned so a turn lands in ~350ms, overshoots ~16° and settles within a second
+      // Tuned so a turn lands in ~350ms, overshoots ~16¬∞ and settles within a second
       [s.rot, s.vr] = spring(s.rot, s.vr, s.turns * 360 + s.pull.x * .35, .022, .82, dt);
       [s.scale, s.vs] = spring(s.scale, s.vs, 1, .1, .76, dt);
       // Once a spin has settled, fold the whole turns away so the numbers stay small
@@ -1082,24 +1018,15 @@ function positionBubble() {
 
 /* ---------- What each sticker does ---------- */
 const found = new Set();
-let fontIndex = 0, themeIndex = 0, reps = 0, celebrated = false;
+let fontIndex = 0, themeIndex = 0, celebrated = false;
 
 function react(s) {
   const el = s.el;
   switch (s.kind) {
     case 'book':
-      spin(s);
-      say(s, CONFIG.reading);
-      break;
     case 'gym':
-      reps += 1;
-      spin(s);
-      say(s, reps === 10 ? 'Ten reps. Rest day earned.' : `Rep ${reps}`, 1600);
-      break;
     case 'pencil':
       spin(s);
-      setSketching(!sketching);
-      say(s, sketching ? 'Sketch mode on. Draw anywhere up here.' : 'Sketch mode off.');
       break;
     case 'type': {
       fontIndex = (fontIndex + 1) % FONTS.length;
@@ -1110,19 +1037,16 @@ function react(s) {
       root.setProperty('--display-track', f.track);
       root.setProperty('--display-scale', f.scale);
       spin(s);
-      say(s, `Headlines now in ${f.name}`);
       break;
     }
     case 'palette': {
-      const t = applyTheme(themeIndex + 1, 1.2);
+      applyTheme(themeIndex + 1, 1.2);
       cycleThemes();
       spin(s);
-      say(s, `Palette: ${t.name}`);
       break;
     }
     case 'compass': {
       spin(s, 2);
-      say(s, CONFIG.roaming);
       break;
     }
   }
@@ -1134,7 +1058,6 @@ function react(s) {
       setTimeout(() => {
         const c = centreOfPlayground();
         if (!reduceMotion) burst(c.x, c.y);
-        say('me', 'You found everything. The work is just below.', 4000);
       }, 900);
     }
   }
@@ -1282,7 +1205,7 @@ function runIntro() {
       <g class="display">
         <g class="eye">${pixels(117)}</g><g class="eye">${pixels(229)}</g>
         <g class="pupils"><rect class="pupil" x="111" y="96" width="12" height="40" rx="2"/><rect class="pupil" x="223" y="96" width="12" height="40" rx="2"/></g>
-        <text class="readout" x="180" y="182" text-anchor="middle">08<tspan class="colon">:</tspan>47 AM · LATE</text>
+        <text class="readout" x="180" y="182" text-anchor="middle">08<tspan class="colon">:</tspan>47 AM ¬∑ LATE</text>
       </g>`;
     return svg;
   };
@@ -1460,7 +1383,7 @@ function runIntro() {
       camSet({ x: c.x, y: c.y, z: fit * .5, r: 0 });
       camTo({ z: fit }, 750, ease.land).then(() => camTo({ z: fit * 1.06 }, 1400, ease.glide));
     } },
-    { ms: 800, run: () => look(place([word('You’re staring at the', 't-small up4', 'type')], { dx: 0, dy: 70 }), 600, ease.glide, { z: 1 }) },
+    { ms: 800, run: () => look(place([word('You‚Äôre staring at the', 't-small up4', 'type')], { dx: 0, dy: 70 }), 600, ease.glide, { z: 1 }) },
     // tilt the camera up to the ceiling
     { ms: 2000, run: () => {
       const c = place([ceiling('CEILING.')], { dx: 0, dy: -150 });
