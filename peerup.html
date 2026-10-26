@@ -108,6 +108,17 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
 .chip.pink { background: rgba(227, 155, 227, .55); }
 .chip.blue { background: rgba(120, 123, 203, .3); }
 
+/* Load-in: the hero assembles itself. The phone rises, the title settles,
+   and the tags fly in from the sides and land around the phone, all within ~1.3s */
+.kicker { animation: heroDrop .7s .05s cubic-bezier(.2, .8, .2, 1) both; }
+.title { animation: heroDrop .9s .12s cubic-bezier(.2, .8, .2, 1) both; }
+.hero-hand { animation: heroRise 1s .15s cubic-bezier(.2, 1, .3, 1) both; }
+.chip { --fx: calc(-320 * var(--u)); --fr: -14deg; animation: chipIn .8s var(--d, .5s) cubic-bezier(.25, 1.35, .45, 1) both; }
+.chip.r { --fx: calc(320 * var(--u)); --fr: 14deg; }
+@keyframes heroDrop { from { opacity: 0; translate: 0 calc(-60 * var(--u)); filter: blur(8px); } }
+@keyframes heroRise { from { opacity: 0; translate: 0 calc(260 * var(--u)); scale: .92; } }
+@keyframes chipIn { from { opacity: 0; translate: var(--fx) calc(40 * var(--u)); rotate: var(--fr); scale: .6; } }
+
 /* ---------- About ---------- */
 .sep { color: rgba(0, 0, 0, .3); font-weight: 400; padding: 0 .6em; }
 .card {
@@ -245,7 +256,7 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
   .sec > h3.a + p.a { margin-top: 6px; }
   .sec > .row + p.a, .sec > p.a + p.a { margin-top: 18px; }
 }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .back { transition: none; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .back { transition: none; } .kicker, .title, .hero-hand, .chip { animation: none; } }
 </style>
 </head>
 <body>
@@ -272,10 +283,10 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
     <h1 class="a t title" style="--x:239;--y:204;--w:1440;--fs:113.45;--lh:113.45">Communicate&nbsp; Effectively<br>at&nbsp; workplace</h1>
     <div class="stage">
       <img class="a hero-hand" style="--x:699;--y:438;--w:788" src="assets/work/peerup/hero-hand.webp" width="1576" height="2076" alt="PeerUp's AI mentor, Miss Maya, mid-call on a phone held by a wooden hand">
-      <span class="a chip pink r" style="--x:1178;--y:642;--w:297"><span aria-hidden="true">📚</span>10+ languages</span>
-      <span class="a chip blue" style="--x:385;--y:765;--w:243"><span aria-hidden="true">👩🏻‍💻</span>case study</span>
-      <span class="a chip pink" style="--x:523;--y:1001;--w:324"><span aria-hidden="true">👩🏻‍💻</span>onboarding flow</span>
-      <span class="a chip blue r" style="--x:1326;--y:1033;--w:243"><span aria-hidden="true">👩🏻‍💻</span>case study</span>
+      <span class="a chip pink r" style="--x:1178;--y:642;--w:297;--d:.45s"><span aria-hidden="true">📚</span>10+ languages</span>
+      <span class="a chip blue" style="--x:385;--y:765;--w:243;--d:.55s"><span aria-hidden="true">👩🏻‍💻</span>case study</span>
+      <span class="a chip pink" style="--x:523;--y:1001;--w:324;--d:.65s"><span aria-hidden="true">👩🏻‍💻</span>onboarding flow</span>
+      <span class="a chip blue r" style="--x:1326;--y:1033;--w:243;--d:.75s"><span aria-hidden="true">👩🏻‍💻</span>case study</span>
     </div>
   </header>
 
