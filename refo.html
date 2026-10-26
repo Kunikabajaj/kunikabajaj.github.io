@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>REFO case study · Kunika Bajaj</title>
+<meta name="description" content="REFO: a guided dashboard that turns complex loan approvals into a simple digital journey.">
+<!-- Link previews (WhatsApp, LinkedIn, Slack...). Once the site has a domain, make og:image a full https:// URL -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="REFO case study · Kunika Bajaj">
+<meta property="og:description" content="REFO: a guided dashboard that turns complex loan approvals into a simple digital journey.">
+<meta property="og:image" content="assets/share/refo.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 rx=%2724%27 fill=%27%230d0e4f%27/%3E%3Cpath d=%27M50 14C53 38 62 47 86 50 62 53 53 62 50 86 47 62 38 53 14 50 38 47 47 38 50 14Z%27 fill=%27%23ff5fcf%27/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anybody:wght@600&family=Plus+Jakarta+Sans:wght@400;500;600&family=Figtree:wght@600&display=swap" rel="stylesheet">
+<style>
+/*
+  Built from the Figma frame "portfolio-finals > REFO" (1920 wide), the same way as peerup.html:
+  desktop places every piece at its Figma coordinates (--u = one Figma pixel);
+  phones (< 900px) fall back to a reading flow.
+*/
+:root { --ink: #000; --note-ink: #05144d; --sans: 'Plus Jakarta Sans', system-ui, sans-serif; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: #fff; color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+img { display: block; max-width: none; }
+
+.wrap { container-type: inline-size; max-width: 1920px; margin: 0 auto; }
+.canvas { --u: calc(100cqw / 1920); position: relative; height: calc(13673 * var(--u)); background: #fff; overflow: hidden; }
+.sec, .row { display: contents; }
+.a {
+  position: absolute; margin: 0; z-index: 2;
+  left: calc(var(--x) * var(--u)); top: calc(var(--y) * var(--u)); width: calc(var(--w) * var(--u));
+}
+img.a { height: auto; }
+.t { font-size: calc(var(--fs) * var(--u)); line-height: calc(var(--lh) * var(--u)); letter-spacing: var(--ls, 0); }
+.sb { font-weight: 600; }
+.rg { font-weight: 400; }
+h1.a, h2.a, h3.a { white-space: nowrap; }
+
+/* the lower half sits on a white-to-sky gradient */
+.sky { position: absolute; z-index: 0; left: 0; right: 0; top: calc(6826 * var(--u)); bottom: 0; background: linear-gradient(180deg, #fff, #daf3ff); }
+
+.brand { font-family: 'Anybody', var(--sans); font-weight: 600; }
+.chip {
+  height: calc(68 * var(--u)); z-index: 3;
+  display: flex; align-items: center; padding-left: calc(14 * var(--u));
+  border: calc(2 * var(--u)) solid transparent; border-radius: calc(36 * var(--u));
+  background:
+    linear-gradient(100deg, rgba(183, 255, 160, .89), rgba(227, 240, 255, .89)) padding-box,
+    linear-gradient(90deg, #8ef283, #72bceb) border-box;
+  font-size: calc(32 * var(--u)); white-space: nowrap;
+}
+.sw { height: calc(294 * var(--u)); border-radius: calc(32 * var(--u)); }
+.dot { aspect-ratio: 1; border-radius: 50%; background: #2f86ff; z-index: 4; }
+.note {
+  z-index: 4; color: var(--note-ink); font-weight: 500;
+  font-size: calc(16 * var(--u)); line-height: 1.25;
+  border: 1px solid #62abff; border-radius: calc(6 * var(--u));
+  background: linear-gradient(120deg, rgba(123, 255, 152, .5), rgba(110, 185, 255, .5));
+  backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+}
+.note-big {
+  z-index: 4; color: var(--note-ink); font-weight: 500;
+  font-size: calc(27 * var(--u)); line-height: calc(34 * var(--u));
+  background: linear-gradient(92deg, #baffa4, #89a2ff);
+}
+
+.back {
+  position: fixed; z-index: 50; left: max(16px, env(safe-area-inset-left, 0px)); top: 16px;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 16px 10px 12px; border-radius: 999px;
+  background: rgba(255, 255, 255, .85); color: #16133d; text-decoration: none;
+  font: 600 14px/1 'Figtree', system-ui, sans-serif;
+  box-shadow: 0 8px 24px -10px rgba(22, 19, 61, .45);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  transition: transform .2s;
+}
+.back:hover { transform: translateX(-2px); }
+.back svg { width: 16px; height: 16px; }
+:focus-visible { outline: 3px solid #2f86ff; outline-offset: 3px; }
+
+/* ================= Phones and small tablets: reading flow ================= */
+@media (max-width: 899px) {
+  .canvas { height: auto; padding: 72px 0 0; }
+  .sky { top: 60%; }
+  .sec { display: block; position: relative; padding: 0 20px; margin-top: 44px; }
+  .sec:first-child { margin-top: 0; }
+  .a { position: relative; left: auto; top: auto; width: auto; }
+  img.a { width: 100%; }
+  .t { font-size: var(--m, 17px); line-height: 1.4; letter-spacing: 0; }
+  h1.a, h2.a, h3.a { white-space: normal; line-height: 1.15; }
+  .h-big { --m: 30px; }
+  .h-mid { --m: 26px; }
+  .logo { width: 64px !important; margin-bottom: 18px; }
+  .brand-row { display: flex !important; align-items: baseline; gap: 2px; margin-bottom: 10px; }
+  .brand { --m: 40px; line-height: 1 !important; }
+  .intro { --m: 26px; line-height: 1.25 !important; }
+  .chips { display: flex !important; flex-wrap: wrap; gap: 8px; margin: 22px 0 26px; }
+  .chip { width: auto !important; height: auto; padding: 7px 14px; border-width: 1.5px; border-radius: 99px; font-size: 14px; }
+  .line, .connector, .dot { display: none; }
+  .row { display: grid; gap: 14px; margin-top: 18px; }
+  .row.two { grid-template-columns: 1fr 1fr; }
+  .swatches { display: grid !important; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 14px; }
+  .sw { width: auto !important; height: 90px; border-radius: 14px; }
+  .note { display: block; margin: 16px 0; padding: 12px 14px !important; font-size: 14px; border-radius: 10px; }
+  .note-big { display: block; margin-top: -6px; padding: 14px 16px !important; font-size: 15px; line-height: 1.4; }
+  .row.bars { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .row.bars img { height: 54px; object-fit: fill; border-radius: 12px; }
+  .note, .note-big { height: auto !important; margin-bottom: 24px; }
+  .mock { width: calc(100% + 40px) !important; margin: 0 -20px; }
+  .end { width: calc(100% + 40px) !important; margin: 24px -20px 0; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .back { transition: none; } }
+</style>
+</head>
+<body>
+<a class="back" href="index.html#work" aria-label="Back to all work">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+  All work
+</a>
+
+<div class="wrap">
+<main class="canvas">
+  <div class="sky" aria-hidden="true"></div>
+
+  <!-- ===== Intro ===== -->
+  <header class="sec">
+    <img class="a logo" style="--x:88;--y:64;--w:112" src="assets/work/refo/logo.webp" width="224" height="224" alt="REFO logo">
+    <div class="brand-row" style="display:contents">
+      <h1 class="a t brand" style="--x:88;--y:302;--w:250;--fs:96;--lh:40;--ls:.02em">REFO</h1>
+      <span class="a t brand" style="--x:350;--y:302;--w:21;--fs:96;--lh:40" aria-hidden="true">.</span>
+    </div>
+    <p class="a t sb intro" style="--x:392;--y:267;--w:1415;--fs:77;--lh:97;--ls:.02em">Refo is a lending-automation platform that helps banks/fintechs run the whole loan journey with ease</p>
+    <img class="a line" style="--x:391;--y:675;--w:1172" src="assets/work/refo/line.webp" alt="">
+    <div class="chips" style="display:contents">
+      <span class="a chip" style="--x:437;--y:646;--w:224">Onboarding</span>
+      <span class="a chip" style="--x:717;--y:646;--w:364">Document collection</span>
+      <span class="a chip" style="--x:1137;--y:645;--w:260">Policy&nbsp; Checks</span>
+      <span class="a chip" style="--x:1453;--y:645;--w:318">Monitor Approvals</span>
+    </div>
+    <img class="a" style="--x:171;--y:789;--w:1579" src="assets/work/refo/laptop.webp" width="2400" height="1687" alt="REFO dashboard on a laptop, showing cases processed this year and the loan pipeline">
+  </header>
+
+  <!-- ===== Task ===== -->
+  <section class="sec" aria-labelledby="task-h">
+    <h2 id="task-h" class="a t sb h-big" style="--x:418;--y:1991;--w:1310;--fs:77;--lh:97;--ls:.02em">Task</h2>
+    <p class="a t rg" style="--x:418;--y:2143;--w:1356;--fs:42;--lh:53;--ls:.02em">Build a clean, guided dashboard for Refo that turns complex loan approvals into a simple digital journey, reduces errors, and delivers accurate decisions.</p>
+    <div class="row two">
+      <img class="a" style="--x:151;--y:2374;--w:791" src="assets/work/refo/sq1.webp" width="1582" height="1582" alt="REFO logo mark on a green-to-blue gradient" loading="lazy">
+      <img class="a" style="--x:1001;--y:2374;--w:791" src="assets/work/refo/sq2.webp" width="1582" height="1582" alt="REFO app icon on a phone" loading="lazy">
+    </div>
+  </section>
+
+  <!-- ===== Data ===== -->
+  <section class="sec" aria-label="Integrations">
+    <p class="a t rg" style="--x:427;--y:3336;--w:1360;--fs:42;--lh:53;--ls:.02em">Refo can fetch data seamlessly from places like Databases &amp; Warehouses, Cloud storage &amp; files, analyse it and help in&nbsp; building&nbsp; Robust integrations &amp; data infrastructure</p>
+    <img class="a" style="--x:215;--y:3632;--w:1490" src="assets/work/refo/dash.webp" width="2400" height="1472" alt="Company credit overview for a borrower: score, CMR, balances and facilities" loading="lazy">
+  </section>
+
+  <!-- ===== Style guide ===== -->
+  <section class="sec" aria-labelledby="sg-h">
+    <h2 id="sg-h" class="a t sb h-mid" style="--x:86;--y:4717;--w:400;--fs:60;--lh:76">Style Guide</h2>
+    <div class="row">
+      <img class="a" style="--x:88;--y:4878;--w:801" src="assets/work/refo/sg1.webp" width="1602" height="2062" alt="3D illustration of growth charts in REFO blue" loading="lazy">
+    </div>
+    <div class="row two">
+      <img class="a" style="--x:917;--y:4878;--w:565" src="assets/work/refo/sg-logo.webp" width="1130" height="604" alt="REFO wordmark" loading="lazy">
+      <img class="a" style="--x:1521;--y:4878;--w:275" src="assets/work/refo/sg-icon.webp" width="550" height="604" alt="REFO icon" loading="lazy">
+    </div>
+    <div class="row">
+      <img class="a" style="--x:921;--y:5204;--w:871" src="assets/work/refo/sg-type.webp" width="1742" height="744" alt="Typeface: Plus Jakarta Sans in Regular, Medium and Semi Bold" loading="lazy">
+    </div>
+    <div class="swatches" style="display:contents" role="list" aria-label="Colour palette">
+      <div class="a sw" role="listitem" aria-label="Blue #006DFF" style="--x:921;--y:5608;--w:162;background:#006dff"></div>
+      <div class="a sw" role="listitem" aria-label="Green #70E826" style="--x:1097;--y:5608;--w:162;background:#70e826"></div>
+      <div class="a sw" role="listitem" aria-label="Yellow #FFCC16" style="--x:1273;--y:5606;--w:162;background:#ffcc16"></div>
+      <div class="a sw" role="listitem" aria-label="Light grey #F3F2F2" style="--x:1449;--y:5606;--w:162;background:#f3f2f2"></div>
+      <div class="a sw" role="listitem" aria-label="Charcoal #2F2F2F" style="--x:1625;--y:5608;--w:162;background:#2f2f2f"></div>
+    </div>
+  </section>
+
+  <!-- ===== Impact ===== -->
+  <section class="sec" aria-label="Impact">
+    <p class="a t rg" style="--x:89;--y:6053;--w:1300;--fs:40;--lh:50">The Faster,&nbsp; Cheaper, Smoother lending automation&nbsp; platform</p>
+    <img class="a" style="--x:84;--y:6132;--w:1710" src="assets/work/refo/stats.webp" width="2400" height="644" alt="3x faster customer onboarding, 30% increase in customer conversions, 60% reduction in tech costs, 50% reduction in backend process TAT" loading="lazy">
+    <div class="row bars">
+      <img class="a" style="--x:88;--y:6612;--w:488" src="assets/work/refo/g1.webp" width="976" height="324" alt="" loading="lazy">
+      <img class="a" style="--x:88;--y:6794;--w:488" src="assets/work/refo/g2.webp" width="976" height="324" alt="" loading="lazy">
+      <img class="a" style="--x:88;--y:6976;--w:488" src="assets/work/refo/g3.webp" width="976" height="324" alt="" loading="lazy">
+    </div>
+    <div class="row two">
+      <img class="a" style="--x:617;--y:6610;--w:578" src="assets/work/refo/img1.webp" width="1156" height="1072" alt="Business loan sign-up steps: Signup, KYC, Esign" loading="lazy">
+      <img class="a" style="--x:1207;--y:6610;--w:584" src="assets/work/refo/img2.webp" width="1168" height="1072" alt="Sign-up flow builder with verification steps" loading="lazy">
+    </div>
+  </section>
+
+  <!-- ===== Designs ===== -->
+  <section class="sec" aria-labelledby="rd-h">
+    <h2 id="rd-h" class="a t sb h-mid" style="--x:85;--y:7268;--w:420;--fs:61;--lh:77">Refo Designs</h2>
+    <img class="a" style="--x:424;--y:7438;--w:1366" src="assets/work/refo/d1.webp" width="2400" height="1370" alt="Borrower details form with a stepped side navigation" loading="lazy">
+    <img class="a connector" style="--x:255;--y:7916;--w:170" src="assets/work/refo/v1.webp" alt="" loading="lazy">
+    <span class="a dot" style="--x:235;--y:8287;--w:54" aria-hidden="true"></span>
+    <p class="a note" style="--x:123;--y:8314;--w:279;height:calc(104*var(--u));padding:calc(20*var(--u)) calc(6*var(--u)) 0 calc(15*var(--u))">Sleek form with a clear step guided onboarding steps&nbsp; to help banks enter their details easily</p>
+    <img class="a" style="--x:123;--y:8594;--w:1366" src="assets/work/refo/d2.webp" width="2400" height="1926" alt="Financial data step: bank, GST and ITR statements with upload status" loading="lazy">
+    <img class="a connector" style="--x:1483;--y:9474;--w:109" src="assets/work/refo/v3.webp" alt="" loading="lazy">
+    <span class="a dot" style="--x:1562;--y:9859;--w:54" aria-hidden="true"></span>
+    <p class="a note" style="--x:1450;--y:9886;--w:279;height:calc(160*var(--u));padding:calc(42*var(--u)) calc(10*var(--u)) 0 calc(11*var(--u))">Easy to view progress and steps ,informing the users how long is the process and step they are on</p>
+  </section>
+
+  <!-- ===== Mockups ===== -->
+  <section class="sec" aria-label="REFO in use">
+    <img class="a mock" style="--x:0;--y:10250;--w:1920" src="assets/work/refo/mock.webp" width="2400" height="1800" alt="REFO screens on laptops, arranged in a grid" loading="lazy">
+    <div class="row two">
+      <img class="a" style="--x:41;--y:11782;--w:908" src="assets/work/refo/photo.webp" width="1816" height="1382" alt="A loan officer using REFO on a laptop" loading="lazy">
+      <img class="a" style="--x:973;--y:11781;--w:915" src="assets/work/refo/free.webp" width="1831" height="1388" alt="REFO onboarding on a phone" loading="lazy">
+    </div>
+    <p class="a note-big" style="--x:41;--y:12285;--w:1045;height:calc(140*var(--u));padding:calc(19*var(--u)) calc(40*var(--u)) 0 calc(56*var(--u))">Refo onboarding is omnichannel ,&nbsp; meaning the same journey can run across both&nbsp; on app and on the web. The components can also&nbsp; be embedded in the banks ui</p>
+    <img class="a end" style="--x:0;--y:12567;--w:1913" src="assets/work/refo/end.webp" width="2400" height="1300" alt="Thank you for scrolling long! Don't forget to rate the project." loading="lazy">
+  </section>
+
+</main>
+</div>
+</body>
+</html>
