@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About · Kunika Bajaj</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 rx=%2724%27 fill=%27%230d0e4f%27/%3E%3Cpath d=%27M50 14C53 38 62 47 86 50 62 53 53 62 50 86 47 62 38 53 14 50 38 47 47 38 50 14Z%27 fill=%27%23ff5fcf%27/%3E%3C/svg%3E">
+<meta name="description" content="About Kunika Bajaj: a product designer in the middle of the journey, still exploring, still learning.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="About · Kunika Bajaj">
+<meta property="og:description" content="It's not the start or the end of my journey. I'm somewhere in the middle, still exploring, still learning.">
+<meta property="og:url" content="https://kunikabajaj.github.io/about.html">
+<meta property="og:image" content="https://kunikabajaj.github.io/assets/share/home.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Unbounded:wght@600;700;800&family=Caveat+Brush&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg1: #0d0e4f;
+  --bg2: #2a2fbf;
+  --bg3: #5a63f5;
+  --pink: #ff5fcf;
+  --mint: #33e1a1;
+  --sun: #ffd34d;
+  --night: #16133d;
+  --ink: #ffffff;
+  --ink-soft: rgba(255, 255, 255, .84);
+  --ink-faint: rgba(255, 255, 255, .62);
+  --glass: rgba(255, 255, 255, .08);
+  --glass-line: rgba(255, 255, 255, .16);
+  --display: 'Unbounded', system-ui, sans-serif;
+  --body: 'Figtree', system-ui, sans-serif;
+  --gutter: clamp(20px, 5vw, 96px);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg1); color: var(--ink); font-family: var(--body); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+img { display: block; max-width: 100%; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
+
+/* Same night sky as the home page, held still */
+.sky {
+  position: fixed; inset: 0; z-index: -1;
+  background:
+    radial-gradient(55% 45% at 82% 18%, color-mix(in srgb, var(--bg3) 70%, transparent), transparent 70%),
+    radial-gradient(60% 50% at 8% 92%, color-mix(in srgb, var(--bg3) 55%, transparent), transparent 70%),
+    linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 62%, var(--bg3) 130%);
+}
+
+/* ---------- Nav (matches home) ---------- */
+.nav {
+  position: fixed; inset: 0 0 auto 0; z-index: 60;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 18px clamp(16px, 3vw, 40px);
+}
+.brand {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 16px; border-radius: 999px;
+  font: 700 15px/1 var(--display); color: #fff; text-decoration: none;
+  transition: background .3s, color .3s, box-shadow .3s;
+}
+.brand svg { width: 16px; height: 16px; color: var(--pink); }
+.nav-links {
+  display: flex; gap: clamp(16px, 2.4vw, 36px);
+  list-style: none; margin: 0; padding: 0;
+  position: absolute; left: 50%; transform: translateX(-50%);
+  transition: opacity .25s, transform .25s;
+}
+.nav-links a { color: #fff; font-weight: 600; font-size: 15px; text-decoration: none; }
+.nav-links a:hover, .nav-links a[aria-current] { text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 2px; }
+.nav-cta {
+  padding: 10px 18px; border-radius: 999px; background: #fff; color: var(--night);
+  font-weight: 600; font-size: 15px; text-decoration: none; transition: transform .2s, box-shadow .2s;
+}
+.nav-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 20px -8px rgba(0, 0, 0, .5); }
+/* A thin gradient line under the nav separates it from the page; it fades away once you scroll */
+.nav::after {
+  content: ""; position: absolute; left: clamp(16px, 3vw, 40px); right: clamp(16px, 3vw, 40px); bottom: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .35) 20%, var(--pink) 50%, rgba(255, 255, 255, .35) 80%, transparent);
+  pointer-events: none; transition: opacity .3s;
+}
+.nav.scrolled::after { opacity: 0; }
+/* Right side of the nav: plain white text links, no pill */
+.nav-right { display: flex; align-items: center; gap: clamp(18px, 2.4vw, 32px); }
+.nav-text { color: #fff; font-weight: 600; font-size: 15px; text-decoration: none; text-shadow: 0 1px 10px rgba(4, 4, 40, .45); }
+.nav-text:hover, .nav-text[aria-current] { text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 2px; }
+.nav.scrolled .brand { background: #fff; color: var(--night); box-shadow: 0 8px 24px -10px rgba(0, 0, 0, .5); }
+.nav.scrolled .nav-links { opacity: 0; transform: translate(-50%, -10px); pointer-events: none; }
+
+/* ---------- Opening ---------- */
+.open {
+  min-height: 92svh; display: grid; align-items: center;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, .75fr); gap: clamp(24px, 4vw, 64px);
+  padding: 120px var(--gutter) 40px;
+}
+.eyebrow { font: 600 13px/1 var(--body); letter-spacing: .16em; text-transform: uppercase; color: var(--pink); margin: 0 0 22px; }
+.open h1 {
+  margin: 0; font: 800 clamp(2rem, 4.6vw, 4.4rem)/1.04 var(--display); letter-spacing: -.02em;
+  text-wrap: balance;
+}
+.open h1 .soft { color: var(--ink-faint); }
+.open .mid {
+  margin: clamp(18px, 2.6vw, 30px) 0 0; max-width: 30ch;
+  font: 500 clamp(1.25rem, 2vw, 1.8rem)/1.35 var(--body); color: var(--ink-soft);
+}
+.open .mid em { font-style: normal; color: var(--pink); }
+.me { position: relative; justify-self: center; width: min(100%, 380px); }
+.me img { width: 100%; height: auto; filter: drop-shadow(0 0 28px color-mix(in srgb, var(--pink) 35%, transparent)) drop-shadow(0 30px 40px rgba(4, 4, 40, .45)); }
+.me .note {
+  position: absolute; left: -6%; top: 6%; rotate: -8deg;
+  font: 400 clamp(1.3rem, 2vw, 1.7rem)/1 'Caveat Brush', cursive; color: var(--sun);
+}
+.me .note svg { display: block; width: 46px; height: 40px; margin: 6px 0 0 46px; color: var(--sun); }
+
+/* ---------- Intro ---------- */
+.intro { padding: clamp(24px, 6vw, 80px) var(--gutter); display: grid; grid-template-columns: minmax(0, .75fr) minmax(0, 1.25fr); gap: clamp(20px, 4vw, 64px); }
+.label { font: 700 clamp(1.2rem, 1.8vw, 1.5rem)/1.2 var(--display); margin: 0; }
+.intro .copy { display: grid; gap: 18px; max-width: 62ch; }
+.intro p { margin: 0; font-size: clamp(1.05rem, .9rem + .45vw, 1.25rem); line-height: 1.6; color: var(--ink-soft); }
+.intro strong { color: #fff; font-weight: 600; }
+
+/* ---------- The path ---------- */
+.path { padding: clamp(40px, 7vw, 96px) var(--gutter); }
+.path-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: clamp(28px, 4vw, 48px); }
+.path-head h2 { margin: 0; font: 800 clamp(1.8rem, 3.6vw, 3rem)/1.05 var(--display); letter-spacing: -.02em; }
+.path-head p { margin: 0; color: var(--ink-faint); }
+.stops { list-style: none; margin: 0; padding: 0; position: relative; max-width: 860px; }
+/* the road: solid for the miles done, dotted and fading for the ones still ahead */
+.stops::before {
+  content: ""; position: absolute; left: 11px; top: 8px; bottom: 120px; width: 3px; border-radius: 3px;
+  background: linear-gradient(var(--glass-line), var(--pink));
+}
+.stop { position: relative; padding: 0 0 clamp(26px, 3.4vw, 40px) 52px; }
+.stop::before {
+  content: ""; position: absolute; left: 2px; top: 4px; width: 21px; height: 21px; border-radius: 50%;
+  background: var(--bg1); border: 3px solid rgba(255, 255, 255, .7);
+}
+.stop .yr { font: 700 13px/1 var(--display); letter-spacing: .08em; color: var(--ink-faint); }
+.stop h3 { margin: 8px 0 6px; font: 700 clamp(1.15rem, 1.7vw, 1.45rem)/1.25 var(--display); }
+.stop h3 span { color: var(--ink-faint); font-weight: 600; }
+.stop p { margin: 0; max-width: 58ch; color: var(--ink-soft); line-height: 1.55; font-size: 1.02rem; }
+.stop.now::before { background: var(--pink); border-color: #fff; box-shadow: 0 0 0 7px color-mix(in srgb, var(--pink) 30%, transparent); }
+.stop.now .yr { color: var(--pink); }
+.here {
+  display: inline-block; margin-left: 10px; padding: 5px 10px; border-radius: 999px; vertical-align: middle;
+  background: var(--pink); color: var(--night); font: 700 11px/1 var(--body); letter-spacing: .08em; text-transform: uppercase;
+}
+.stop.ahead { padding-bottom: 0; }
+.stop.ahead::before { border-style: dashed; border-color: var(--ink-faint); background: transparent; }
+.stop.ahead::after {
+  content: ""; position: absolute; left: 11px; top: -110px; height: 110px; width: 3px;
+  background: repeating-linear-gradient(var(--pink) 0 6px, transparent 6px 14px);
+  -webkit-mask: linear-gradient(#000, transparent); mask: linear-gradient(#000, transparent);
+}
+.stop.ahead h3 { font: 400 clamp(1.6rem, 2.6vw, 2.2rem)/1 'Caveat Brush', cursive; color: var(--sun); }
+
+/* ---------- Exploring now ---------- */
+.now-grid { padding: clamp(40px, 7vw, 96px) var(--gutter); }
+.now-grid h2 { margin: 0 0 clamp(24px, 3vw, 40px); font: 800 clamp(1.8rem, 3.6vw, 3rem)/1.05 var(--display); letter-spacing: -.02em; }
+.cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.card { padding: 24px; border-radius: 24px; background: var(--glass); border: 1px solid var(--glass-line); }
+.card .ico { font-size: 28px; line-height: 1; }
+.card h3 { margin: 16px 0 8px; font: 700 1.15rem/1.25 var(--display); }
+.card p { margin: 0; color: var(--ink-soft); line-height: 1.55; }
+
+/* ---------- Off the clock ---------- */
+.off { padding: clamp(24px, 5vw, 64px) var(--gutter); }
+.off h2 { margin: 0 0 20px; font: 800 clamp(1.4rem, 2.4vw, 2rem)/1.1 var(--display); }
+.chips { display: flex; flex-wrap: wrap; gap: 10px; list-style: none; margin: 0; padding: 0; }
+.chips li { padding: 10px 16px; border-radius: 999px; background: var(--glass); border: 1px solid var(--glass-line); font-weight: 600; }
+
+/* ---------- Contact (matches home) ---------- */
+.contact { text-align: center; padding: clamp(56px, 9vw, 120px) var(--gutter) 64px; }
+.contact h2 { font: 800 clamp(2.4rem, 6vw, 5rem)/.98 var(--display); letter-spacing: -.02em; margin: 0 auto 20px; max-width: 12ch; }
+.contact p { margin: 0 auto 32px; max-width: 46ch; color: var(--ink-soft); font-size: 1.1rem; line-height: 1.55; }
+.btn { display: inline-flex; align-items: center; justify-content: center; padding: 16px 28px; border-radius: 999px; font-weight: 600; font-size: 16px; text-decoration: none; transition: transform .2s, box-shadow .2s; }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 12px 26px -10px rgba(0, 0, 0, .55); }
+.btn-light { background: #fff; color: var(--night); }
+.contact .links { margin-top: 28px; display: flex; justify-content: center; gap: 28px; }
+.contact .links a { font-weight: 600; text-underline-offset: 6px; }
+
+/* Gentle rise as each section scrolls in */
+.reveal { opacity: 0; translate: 0 24px; transition: opacity .7s ease, translate .7s cubic-bezier(.2, .8, .2, 1); }
+.reveal.in { opacity: 1; translate: 0 0; }
+
+@media (max-width: 900px) {
+  .open { grid-template-columns: 1fr; min-height: 0; padding-top: 104px; }
+  .me { width: min(78%, 320px); }
+  .intro { grid-template-columns: 1fr; }
+  .cards { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .nav-links { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; translate: none; transition: none; }
+}
+</style>
+</head>
+<body>
+<div class="sky" aria-hidden="true"></div>
+
+<header class="nav" id="nav">
+  <a class="brand" href="index.html" aria-label="Kunika Bajaj, home">
+    <svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4C54 34 66 46 96 50 66 54 54 66 50 96 46 66 34 54 4 50 34 46 46 34 50 4Z" fill="currentColor"/></svg>
+    Kunika Bajaj
+  </a>
+  <div class="nav-right">
+    <a class="nav-text" href="about.html" aria-current="page">About me</a>
+    <a class="nav-text" href="assets/Kunika-Bajaj-Resume.pdf" target="_blank" rel="noopener">Resume</a>
+  </div>
+</header>
+
+<main>
+  <section class="open">
+    <div>
+      <p class="eyebrow">About me</p>
+      <h1>It's not the start <span class="soft">or the end</span> of my journey.</h1>
+      <p class="mid">I'm somewhere in the <em>middle</em>, still exploring, still learning.</p>
+    </div>
+    <div class="me">
+      <p class="note" aria-hidden="true">you are here
+        <svg viewBox="0 0 46 40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4c14 2 26 10 32 26"/><path d="M27 26l8 6 4-10"/></svg>
+      </p>
+      <img src="assets/kunika-3d.webp" alt="3D illustration of Kunika in a lilac hoodie, making a peace sign" width="1000" height="1294">
+    </div>
+  </section>
+
+  <section class="intro reveal">
+    <h2 class="label">Hi, I'm Kunika.</h2>
+    <div class="copy">
+      <p>I'm a hands-on product designer based in <strong>Bengaluru</strong>, with a little over three years spent at early-stage startups. That usually means being the first, or the only, designer in the room, so I've learned to do a bit of everything: talking to users, mapping flows, building design systems and sitting with engineers until the thing ships.</p>
+      <p>I'm a curious soul who likes to experiment. I try different styles, keep the ones that work and polish them until they feel right. I'd rather get the grunt work done early so I can spend my time on the details, and on the difference the work makes to the people using it and the business behind it.</p>
+    </div>
+  </section>
+
+  <section class="path reveal" aria-labelledby="path-h">
+    <div class="path-head">
+      <h2 id="path-h">The road so far</h2>
+      <p>A few stops worth mentioning.</p>
+    </div>
+    <ol class="stops">
+      <li class="stop">
+        <span class="yr">2019</span>
+        <h3>Started design school <span>· Srishti, Bengaluru</span></h3>
+        <p>Four years of a Bachelor of Design, learning to look closely, sketch badly, then sketch better.</p>
+      </li>
+      <li class="stop">
+        <span class="yr">2022</span>
+        <h3>First internship <span>· Front Row</span></h3>
+        <p>Audited the website, found the five things holding it back, and redesigned how 500+ students and their instructors talked to each other.</p>
+      </li>
+      <li class="stop">
+        <span class="yr">2023</span>
+        <h3>My first design system <span>· REFO</span></h3>
+        <p>Built components, tokens and documentation from scratch, and tested our forms with more than 50 real people. One confusing field can cost a lot.</p>
+      </li>
+      <li class="stop">
+        <span class="yr">2023</span>
+        <h3>Watching the numbers move <span>· Yearbook Canvas</span></h3>
+        <p>Redesigned the mobile and web experience; monthly visitors went from 700 to 1,600 in three months.</p>
+      </li>
+      <li class="stop">
+        <span class="yr">2024</span>
+        <h3>Founding designer <span>· PeerUp</span></h3>
+        <p>Took a speaking-practice app from zero to launch: the flows, the brand, the onboarding experiments, and an Instagram that grew to 148K followers.</p>
+      </li>
+      <li class="stop now">
+        <span class="yr">2026</span><span class="here">You are here</span>
+        <h3>Building systems, prototyping with AI</h3>
+        <p>Designing a design system from the ground up, and using AI to go from idea to clickable prototype in hours, so there's more time for the details.</p>
+      </li>
+      <li class="stop ahead">
+        <span class="yr">Next</span>
+        <h3>still exploring…</h3>
+      </li>
+    </ol>
+  </section>
+
+  <section class="now-grid reveal" aria-labelledby="now-h">
+    <h2 id="now-h">What I'm exploring right now</h2>
+    <div class="cards">
+      <article class="card">
+        <div class="ico" aria-hidden="true">✨</div>
+        <h3>AI as a design partner</h3>
+        <p>Turning rough ideas into working prototypes fast, so teams can test real flows instead of debating static screens.</p>
+      </article>
+      <article class="card">
+        <div class="ico" aria-hidden="true">🧩</div>
+        <h3>Systems that scale</h3>
+        <p>Tokens, light and dark modes, and components that designers and engineers can build from without second-guessing.</p>
+      </article>
+      <article class="card">
+        <div class="ico" aria-hidden="true">🎞️</div>
+        <h3>Motion and the small stuff</h3>
+        <p>The micro-interactions and states nobody notices until they're missing. They're what make a product feel alive.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="off reveal" aria-labelledby="off-h">
+    <h2 id="off-h">Off the clock</h2>
+    <ul class="chips">
+      <li>📚 Reading</li>
+      <li>🔤 Collecting fonts</li>
+      <li>✏️ Sketching</li>
+      <li>🧭 Wandering new places</li>
+      <li>💪 The gym</li>
+      <li>🎨 Playing with colour</li>
+    </ul>
+  </section>
+
+  <section class="contact reveal" id="contact">
+    <h2>Let's work together</h2>
+    <p>I'm always up for meeting people who care about design. Tell me what you're building.</p>
+    <a class="btn btn-light" href="mailto:kunikabajaj29@gmail.com">kunikabajaj29@gmail.com</a>
+    <div class="links">
+      <a href="https://www.linkedin.com/in/kunika-bajaj-3188051b0/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://www.behance.net/kunikabajaj" target="_blank" rel="noopener">Behance</a>
+    </div>
+  </section>
+</main>
+
+<script>
+// Nav turns into a pill once you scroll, like on the home page
+const nav = document.getElementById('nav');
+addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 40), { passive: true });
+// Sections rise in as they arrive
+const io = new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .15 });
+document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+</script>
+</body>
+</html>

@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PeerUp case study · Kunika Bajaj</title>
+<meta name="description" content="PeerUp: redesigning onboarding for an English-speaking practice app so new users get talking with an AI mentor before they reach the home screen.">
+<!-- Link previews (WhatsApp, LinkedIn, Slack...) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="PeerUp case study · Kunika Bajaj">
+<meta property="og:description" content="PeerUp: redesigning onboarding for an English-speaking practice app so new users get talking with an AI mentor before they reach the home screen.">
+<meta property="og:url" content="https://kunikabajaj.github.io/peerup.html">
+<meta property="og:image" content="https://kunikabajaj.github.io/assets/share/peerup.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 rx=%2724%27 fill=%27%230d0e4f%27/%3E%3Cpath d=%27M50 14C53 38 62 47 86 50 62 53 53 62 50 86 47 62 38 53 14 50 38 47 47 38 50 14Z%27 fill=%27%23ff5fcf%27/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,400;0,600;0,700;1,600;1,700&family=Caveat&family=Unbounded:wght@700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@600&display=swap" rel="stylesheet">
+<style>
+/* Clash Display is free from Fontshare (ITF Free Font License); served from here so the title never falls back */
+/* Proxima Nova, self-hosted */
+@font-face { font-family: 'Proxima Nova Site'; font-weight: 300; font-display: swap; src: url('assets/fonts/ProximaNova-Light.ttf') format('truetype'); }
+@font-face { font-family: 'Proxima Nova Site'; font-weight: 400; font-display: swap; src: url('assets/fonts/ProximaNova-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'Proxima Nova Site'; font-weight: 500 600; font-display: swap; src: url('assets/fonts/ProximaNova-Semibold.ttf') format('truetype'); }
+@font-face { font-family: 'Proxima Nova Site'; font-weight: 700 800; font-display: swap; src: url('assets/fonts/ProximaNova-Bold.ttf') format('truetype'); }
+@font-face { font-family: 'Clash Display'; font-weight: 600; font-display: swap; src: url('assets/fonts/ClashDisplay-Semibold.otf') format('opentype'); }
+/*
+  Built from the Figma frame "portfolio-finals > PeerUp" (1920 wide).
+  Desktop: every piece sits at its Figma coordinates, in Figma pixels (--u = one Figma pixel),
+  so the page is the Figma frame scaled to the window.
+  Phones (< 900px): the same pieces fall back into a normal reading flow;
+  rows of screens scroll sideways, annotated clusters stay as small scaled stages.
+*/
+:root {
+  --panel: #eef1fe;
+  --soft: rgba(0, 0, 0, .7);
+  --ink-2: #3b3b3b;
+  --accent: #4145b0;
+  --sans: 'Proxima Nova Site', 'Figtree', system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: #fff; color: #000; font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+img { display: block; max-width: none; }
+
+.wrap { container-type: inline-size; max-width: 1920px; margin: 0 auto; }
+.canvas {
+  --u: calc(100cqw / 1920);
+  position: relative; height: calc(17463 * var(--u));
+  background: var(--panel); overflow: hidden;
+}
+/* the frame's 40px white border sits over everything, like the stroke in Figma */
+.canvas::after {
+  content: ''; position: absolute; inset: 0; z-index: 30; pointer-events: none;
+  border: calc(40 * var(--u)) solid #fff;
+}
+.sec, .row, .stage { display: contents; }
+
+/* Anything with .a is placed at its Figma x / y / width */
+.a {
+  position: absolute; margin: 0; z-index: 2;
+  left: calc((var(--x) - var(--ox, 0)) * var(--u));
+  top: calc((var(--y) - var(--oy, 0)) * var(--u));
+  width: calc(var(--w) * var(--u));
+}
+img.a { height: auto; }
+.t { font-size: calc(var(--fs) * var(--u)); line-height: calc(var(--lh) * var(--u)); letter-spacing: var(--ls, 0); }
+.b { font-weight: 700; }
+h1.a, h2.a, h3.a { white-space: nowrap; }
+/* the hand runs past the hero; in Figma the next panel covers it */
+.hero-hand { clip-path: inset(0 0 calc(190 * var(--u)) 0); }
+.sb { font-weight: 600; }
+.rg { font-weight: 400; }
+.soft { color: var(--soft); }
+
+/* Soft pink glows (blurred ellipses in the file) */
+.blob {
+  position: absolute; z-index: 1; pointer-events: none;
+  left: calc((var(--x) - 574) * var(--u)); top: calc((var(--y) - 574) * var(--u));
+  width: calc((var(--w) + 1148) * var(--u)); aspect-ratio: 1;
+  background: radial-gradient(closest-side, rgba(253, 217, 253, .95), rgba(253, 217, 253, .7) 32%, rgba(253, 217, 253, .3) 62%, rgba(253, 217, 253, 0));
+}
+
+/* ---------- Hero ---------- */
+.hero-bg {
+  height: calc(1246 * var(--u)); z-index: 0;
+  background: linear-gradient(180deg, #6e68cd 0%, #7972e0 13%, #8a83f1 29%, #a49ef5 45%, #b5b4f7 61%, #cccdf9 77%, #dfdffb 89%, #eceffe 100%);
+}
+.kicker { color: rgba(255, 255, 255, .8); text-align: center; letter-spacing: .17em; font-weight: 400; }
+.title {
+  white-space: nowrap;
+  font-family: 'Clash Display', 'Unbounded', sans-serif; font-weight: 600; text-align: center;
+  background: linear-gradient(180deg, #fff 0%, rgba(255, 255, 255, .53) 84%, rgba(255, 255, 255, .42) 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.chip {
+  height: calc(64 * var(--u)); z-index: 3;
+  display: flex; align-items: center; gap: calc(6 * var(--u));
+  padding-left: calc(22 * var(--u));
+  border: calc(1 * var(--u)) solid #fff; border-radius: calc(38 * var(--u));
+  backdrop-filter: blur(calc(9 * var(--u))); -webkit-backdrop-filter: blur(calc(9 * var(--u)));
+  color: #fff; font-style: italic; font-weight: 600; font-size: calc(32 * var(--u)); white-space: nowrap;
+}
+.chip span { font-style: normal; font-size: calc(34 * var(--u)); }
+.chip.pink { background: rgba(227, 155, 227, .55); }
+.chip.blue { background: rgba(120, 123, 203, .3); }
+
+/* Load-in: the hero assembles itself. The phone rises, the title settles,
+   and the tags fly in from the sides and land around the phone, all within ~1.3s */
+.kicker { animation: heroDrop .7s .05s cubic-bezier(.2, .8, .2, 1) both; }
+.title { animation: heroDrop .9s .12s cubic-bezier(.2, .8, .2, 1) both; }
+.hero-hand { animation: heroRise 1s .15s cubic-bezier(.2, 1, .3, 1) both; }
+.chip { --fx: calc(-320 * var(--u)); --fr: -14deg; animation: chipIn .8s var(--d, .5s) cubic-bezier(.25, 1.35, .45, 1) both; }
+.chip.r { --fx: calc(320 * var(--u)); --fr: 14deg; }
+@keyframes heroDrop { from { opacity: 0; translate: 0 calc(-60 * var(--u)); } }
+@keyframes heroRise { from { opacity: 0; translate: 0 calc(260 * var(--u)); scale: .92; } }
+@keyframes chipIn { from { opacity: 0; translate: var(--fx) calc(40 * var(--u)); rotate: var(--fr); scale: .6; } }
+
+/* ---------- About ---------- */
+.sep { color: rgba(0, 0, 0, .3); font-weight: 400; padding: 0 .6em; }
+.card {
+  height: calc(482 * var(--u));
+  background: rgba(255, 255, 255, .57); border-radius: calc(30 * var(--u));
+  box-shadow: 0 calc(4 * var(--u)) calc(20 * var(--u)) rgba(214, 218, 236, .69);
+  backdrop-filter: blur(calc(2 * var(--u))); -webkit-backdrop-filter: blur(calc(2 * var(--u)));
+}
+.card-t { z-index: 3; }
+.card-t h3 { margin: 0 0 calc(20 * var(--u)); font-size: calc(30 * var(--u)); line-height: calc(40 * var(--u)); font-weight: 700; }
+.card-t p { margin: 0; font-size: calc(30 * var(--u)); line-height: 1.4; letter-spacing: -.02em; color: var(--soft); }
+.ic {
+  z-index: 3; height: calc(88 * var(--u));
+  display: grid; place-items: center;
+  background: #fff; border-radius: calc(16 * var(--u));
+  box-shadow: 0 calc(4 * var(--u)) calc(25.8 * var(--u)) #d8d9e8;
+}
+.ic img { width: calc(48 * var(--u)); height: auto; }
+.ic img.narrow { width: calc(41 * var(--u)); }
+
+/* ---------- Key insights ---------- */
+.stat-n { font-weight: 600; white-space: nowrap; letter-spacing: -.02em; }
+.arrow { height: calc(119 * var(--u)); }
+
+/* ---------- Flows ---------- */
+.note { font-family: 'Caveat', cursive; font-size: calc(18 * var(--u)); line-height: 1.25; color: #020252; transform-origin: 0 0; rotate: -2.4deg; }
+.note.flat { rotate: 0deg; }
+.dd { transform-origin: 0 0; }
+.label { font-size: calc(16 * var(--u)); font-weight: 600; white-space: nowrap; }
+
+/* ---------- Problems / goals ---------- */
+.list { list-style: none; padding: 0; font-weight: 600; }
+.list li { position: relative; padding-left: calc(55 * var(--u)); margin-bottom: calc(45 * var(--u)); }
+.list li::before { content: '•'; position: absolute; left: calc(20 * var(--u)); }
+.hl { color: var(--accent); }
+.rule {
+  height: calc(1 * var(--u)); min-height: 1px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, .31), rgba(63, 59, 59, .91) 41%, rgba(255, 255, 255, .24));
+}
+
+/* ---------- Experiments ---------- */
+.x-pin, .x-stamp { z-index: 4; }
+
+/* the final-flow recording plays inside the phone's screen */
+.phone-video { z-index: 3; height: calc(746 * var(--u)); border-radius: calc(40 * var(--u)); object-fit: cover; background: #fff; }
+.x-text { z-index: 3; }
+
+/* back to the home page */
+.back {
+  position: fixed; z-index: 50; left: max(16px, env(safe-area-inset-left, 0px)); top: 16px;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 16px 10px 12px; border-radius: 999px;
+  background: rgba(255, 255, 255, .85); color: #16133d; text-decoration: none;
+  font: 600 14px/1 'Figtree', system-ui, sans-serif;
+  box-shadow: 0 8px 24px -10px rgba(22, 19, 61, .45);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  transition: transform .2s;
+}
+.back:hover { transform: translateX(-2px); }
+.back svg { width: 16px; height: 16px; }
+:focus-visible { outline: 3px solid #4145b0; outline-offset: 3px; }
+
+/* ================= Phones and small tablets: reading flow ================= */
+@media (max-width: 899px) {
+  .canvas { height: auto; padding: 8px 0 40px; }
+  .canvas::after { border-width: 8px; }
+  .blob { display: none; }
+  .sec { display: block; position: relative; padding: 0 24px; margin-top: 56px; }
+  .a { position: relative; left: auto; top: auto; width: auto; }
+  .t { font-size: var(--m, 17px); line-height: 1.4; }
+  h1.t, h2.t { line-height: 1.1; }
+  .h-big { --m: 44px; }
+  .h-mid { --m: 32px; }
+  .h-sm { --m: 22px; }
+  img.a { width: 100%; }
+
+  /* hero */
+  .sec.hero { margin: 0 8px; padding: 88px 16px 0; overflow: hidden; border-radius: 0; }
+  .hero-bg { position: absolute; inset: 0; width: auto; height: auto; }
+  .kicker { --m: 13px; position: relative; }
+  .title { --m: 34px; position: relative; line-height: 1.05 !important; white-space: normal; }
+  h1.a, h2.a, h3.a { white-space: normal; }
+  .hero-hand { clip-path: none; }
+  .hero .stage { display: block; position: relative; margin: 20px auto 0; width: 100%; aspect-ratio: 1240 / 1050; --ox: 360; --oy: 432; --u: calc(100cqw / 1290); }
+  .hero .stage .a { position: absolute; left: calc((var(--x) - var(--ox)) * var(--u)); top: calc((var(--y) - var(--oy)) * var(--u)); width: calc(var(--w) * var(--u)); }
+  .hero .stage .chip { width: auto; height: auto; padding: 6px 12px 6px 9px; font-size: 13px; gap: 4px; }
+  .hero .stage .chip span { font-size: 14px; }
+  .hero .stage .chip.r { left: auto; right: 0; }
+  .what p + p { margin-top: 10px; }
+
+  /* about */
+  .card { display: none; }
+  .tile-logo { display: none; }
+  .what { display: grid; gap: 14px; }
+  .about-cards { display: grid; gap: 16px; margin-top: 20px; }
+  .about-card { display: block !important; position: relative; padding: 22px; border-radius: 22px; background: rgba(255, 255, 255, .57); box-shadow: 0 4px 20px rgba(214, 218, 236, .69); }
+  .about-card .ic { position: static; width: 64px !important; height: 64px; border-radius: 14px; margin-bottom: 14px; }
+  .about-card .ic img { width: 34px; }
+  .about-card .ic img.narrow { width: 29px; }
+  .card-t h3 { font-size: 19px; line-height: 1.3; margin-bottom: 8px; }
+  .card-t p { font-size: 16px; }
+
+  /* sideways-scrolling rows of screens */
+  .row { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 24px; margin: 24px -24px 0; padding: 4px 24px 12px; scrollbar-width: none; }
+  .row::-webkit-scrollbar { display: none; }
+  .row > .a { flex: none; width: auto; height: var(--rh, 380px); scroll-snap-align: start; }
+  .row.cards > .a { --rh: 150px; }
+
+  /* small scaled clusters that keep their annotations */
+  .stage { --ox: var(--sox); --oy: var(--soy); --u: var(--mu); display: block; position: relative; margin: 24px -24px 0; overflow-x: auto; scrollbar-width: none; }
+  .stage::-webkit-scrollbar { display: none; }
+  .stage > .inner { position: relative; width: calc(var(--sw) * var(--u)); height: calc(var(--sh) * var(--u)); margin: 0 24px; }
+  .stage .a { position: absolute; left: calc((var(--x) - var(--ox)) * var(--u)); top: calc((var(--y) - var(--oy)) * var(--u)); width: calc(var(--w) * var(--u)); }
+  .stage .t { font-size: calc(var(--fs) * var(--u)); line-height: calc(var(--lh) * var(--u)); letter-spacing: var(--ls, 0); }
+  .stage.fit { overflow: visible; margin: 24px 0 0; }
+  .stage.fit > .inner { margin: 0; }
+
+  .stats { display: grid; gap: 18px; margin-top: 24px; }
+  .stat { display: flex !important; align-items: center; gap: 14px; }
+  .stat .arrow { position: static; width: 30px !important; height: 52px; }
+  .stat .stat-n { font-size: 64px; line-height: 1; }
+  .stat .stat-n small { font-size: 34px; }
+  .stat .t { flex: 1; }
+
+  .list li { padding-left: 22px; margin-bottom: 14px; }
+  .list li::before { left: 4px; }
+  .goals { display: grid; gap: 26px; margin-top: 24px; }
+  .goal { display: grid !important; gap: 10px; }
+  .goal .ic, .goal img { position: static; width: 52px !important; }
+  .goal .rule { position: static; width: 60% !important; }
+  .num-grid { display: grid !important; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+  .num-grid > .a { width: 100%; }
+  .flow-grid { display: grid !important; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 20px; }
+  .flow-grid > .a { width: 100%; }
+  .thanks { text-align: center; margin: 72px 0 24px !important; }
+  .sec > h3.a { margin-top: 36px; }
+  .sec > h2.a + h3.a { margin-top: 20px; }
+  .sec > h3.a + p.a { margin-top: 6px; }
+  .sec > .row + p.a, .sec > p.a + p.a { margin-top: 18px; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .back { transition: none; } .kicker, .title, .hero-hand, .chip { animation: none; } }
+</style>
+</head>
+<body>
+<a class="back" href="index.html#work" aria-label="Back to all work">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+  All work
+</a>
+
+<div class="wrap">
+<main class="canvas">
+
+  <!-- pink glows -->
+  <div class="blob" style="--x:-175;--y:917;--w:884" aria-hidden="true"></div>
+  <div class="blob" style="--x:1244;--y:1787;--w:850" aria-hidden="true"></div>
+  <div class="blob" style="--x:-334;--y:3203;--w:884" aria-hidden="true"></div>
+  <div class="blob" style="--x:1261;--y:4361;--w:884" aria-hidden="true"></div>
+  <div class="blob" style="--x:-315;--y:6916;--w:884" aria-hidden="true"></div>
+  <div class="blob" style="--x:-226;--y:14185;--w:884" aria-hidden="true"></div>
+
+  <!-- ===== Hero ===== -->
+  <header class="sec hero">
+    <div class="a hero-bg" style="--x:40;--y:40;--w:1840" aria-hidden="true"></div>
+    <p class="a t kicker" style="--x:882;--y:137;--w:157;--fs:35;--lh:43">PEERUP</p>
+    <h1 class="a t title" style="--x:239;--y:204;--w:1440;--fs:113.45;--lh:113.45">Communicate&nbsp; Effectively<br>at&nbsp; workplace</h1>
+    <div class="stage">
+      <img class="a hero-hand" style="--x:699;--y:438;--w:788" src="assets/work/peerup/hero-hand.webp" width="1576" height="2076" alt="PeerUp's AI mentor, Miss Maya, mid-call on a phone held by a wooden hand">
+      <span class="a chip pink r" style="--x:1178;--y:642;--w:297;--d:.45s"><span aria-hidden="true">📚</span>10+ languages</span>
+      <span class="a chip blue" style="--x:385;--y:765;--w:243;--d:.55s"><span aria-hidden="true">👩🏻‍💻</span>case study</span>
+      <span class="a chip pink" style="--x:523;--y:1001;--w:324;--d:.65s"><span aria-hidden="true">👩🏻‍💻</span>onboarding flow</span>
+      <span class="a chip blue r" style="--x:1326;--y:1033;--w:243;--d:.75s"><span aria-hidden="true">👩🏻‍💻</span>case study</span>
+    </div>
+  </header>
+
+  <!-- ===== What is PeerUp ===== -->
+  <section class="sec what" aria-labelledby="what-h">
+    <div>
+      <p class="a t rg" style="--x:110;--y:1417;--w:509;--fs:50;--lh:74;--m:22px;--ls:-.02em">What is</p>
+      <h2 id="what-h" class="a t b h-big" style="--x:110;--y:1470;--w:560;--fs:130;--lh:163;--ls:-.02em">Peer Up?</h2>
+    </div>
+    <div>
+      <p class="a t sb" style="--x:774;--y:1417;--w:1030;--fs:30;--lh:42;--ls:-.02em">Learning App<span class="sep">I</span>2025</p>
+      <p class="a t rg soft" style="--x:774;--y:1509;--w:1030;--fs:30;--lh:42;--ls:-.02em">Peer Up helps working professionals communicate more effectively at the workplace. The platform uses AI to create personalised practice plans, enabling learners to practise spoken English and workplace scenarios with both AI and real peers. With instant feedback and targeted exercises from an AI coach, learners build confidence and improve their communication skills faster.</p>
+    </div>
+  </section>
+
+  <!-- ===== About the project ===== -->
+  <section class="sec" aria-labelledby="about-h">
+    <h2 id="about-h" class="a t sb h-mid" style="--x:99;--y:1790;--w:1726;--fs:50;--lh:61">About the project</h2>
+    <div class="a card" style="--x:99;--y:1887;--w:498" aria-hidden="true"></div>
+    <div class="a card" style="--x:713;--y:1887;--w:498" aria-hidden="true"></div>
+    <div class="a card" style="--x:1327;--y:1887;--w:498" aria-hidden="true"></div>
+    <div class="about-cards">
+      <div class="about-card" style="display:contents">
+        <span class="a ic" style="--x:127;--y:1925;--w:88"><img src="assets/work/peerup/ic-problem.svg" width="48" height="48" alt=""></span>
+        <div class="a card-t" style="--x:127;--y:2103;--w:470"><h3>Problem Overview</h3><p>The first task people can do after coming on a home screen is do call either through call or with AI.</p></div>
+      </div>
+      <div class="about-card" style="display:contents">
+        <span class="a ic" style="--x:751;--y:1925;--w:88"><img src="assets/work/peerup/ic-goal.svg" width="48" height="49" alt=""></span>
+        <div class="a card-t" style="--x:751;--y:2103;--w:451"><h3>Intended Business Goal</h3><p>Getting users to hop on a call to reduce drop-off ,get better experience and overall better conversions</p></div>
+      </div>
+      <div class="about-card" style="display:contents">
+        <span class="a ic" style="--x:1365;--y:1925;--w:88"><img class="narrow" src="assets/work/peerup/ic-role.svg" width="41" height="57" alt=""></span>
+        <div class="a card-t" style="--x:1365;--y:2103;--w:422"><h3>My Role in Solving</h3><p>Sole designer partnering with PMs and Support</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Brand tiles ===== -->
+  <section class="sec" aria-label="PeerUp brand and app">
+    <div class="row">
+      <img class="a" style="--x:0;--y:2526;--w:600" src="assets/work/peerup/tile1.webp" width="1200" height="1528" alt="PeerUp logo over a desk of notes and pens" loading="lazy">
+      <img class="a" style="--x:649;--y:2526;--w:626" src="assets/work/peerup/tile2.webp" width="1252" height="1528" alt="PeerUp home screen: practice with peers and with AI characters" loading="lazy">
+      <img class="a" style="--x:1324;--y:2526;--w:596" src="assets/work/peerup/tile3.webp" width="1192" height="1528" alt="The PeerUp app icon on a phone home screen" loading="lazy">
+    </div>
+    <img class="a tile-logo" style="--x:194;--y:2767;--w:237" src="assets/work/peerup/tile1-logo.webp" width="474" height="581" alt="" loading="lazy">
+  </section>
+
+  <!-- ===== Key insights ===== -->
+  <section class="sec" aria-labelledby="ki-h">
+    <h2 id="ki-h" class="a t b h-big" style="--x:147;--y:3450;--w:700;--fs:130;--lh:163;--ls:-.02em">Key Insights</h2>
+    <img class="a" style="--x:108;--y:3718;--w:977" src="assets/work/peerup/macbook.webp" width="1954" height="1484" alt="Laptop showing PeerUp's 'Different ways to practice' screen" loading="lazy">
+    <div class="stats">
+      <div class="stat" style="display:contents">
+        <svg class="a arrow" style="--x:1164;--y:3722;--w:70" viewBox="0 0 70 119" aria-hidden="true"><path d="M35 0 66 57H4Z"/><rect x="28" y="22" width="13" height="97"/></svg>
+        <p class="a stat-n" style="--x:1261;--y:3689;--w:340;font-size:calc(160*var(--u));line-height:calc(201*var(--u))">8<small style="font-size:calc(92*var(--u));margin-left:calc(8*var(--u))">%</small></p>
+        <p class="a t sb soft" style="--x:1529;--y:3772;--w:260;--fs:30;--lh:40">Activation Rate<br>Increase</p>
+      </div>
+      <div class="stat" style="display:contents">
+        <svg class="a arrow" style="--x:1164;--y:4022;--w:70" viewBox="0 0 70 119" aria-hidden="true"><path d="M35 0 66 57H4Z"/><rect x="28" y="22" width="13" height="97"/></svg>
+        <p class="a stat-n" style="--x:1261;--y:3989;--w:340;font-size:calc(160*var(--u));line-height:calc(201*var(--u))">17<small style="font-size:calc(92*var(--u));margin-left:calc(8*var(--u))">%</small></p>
+        <p class="a t sb soft" style="--x:1529;--y:4072;--w:260;--fs:30;--lh:40">Completion Rate<br>Increase</p>
+      </div>
+      <div class="stat" style="display:contents">
+        <svg class="a arrow" style="--x:1164;--y:4321;--w:70" viewBox="0 0 70 119" aria-hidden="true"><path d="M35 0 66 57H4Z"/><rect x="28" y="22" width="13" height="97"/></svg>
+        <p class="a stat-n" style="--x:1261;--y:4289;--w:340;font-size:calc(160*var(--u));line-height:calc(201*var(--u))">12<small style="font-size:calc(92*var(--u));margin-left:calc(8*var(--u))">%</small></p>
+        <p class="a t sb soft" style="--x:1529;--y:4332;--w:300;--fs:30;--lh:40">Conversion Rate<br>Increase<br>(from 25% to 37%)</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Original flows ===== -->
+  <section class="sec" aria-labelledby="of-h">
+    <h2 id="of-h" class="a t b h-big" style="--x:101;--y:4696;--w:900;--fs:130;--lh:158">Original Flows</h2>
+    <div class="stage" style="--sox:60;--soy:4840;--sw:1800;--sh:570;--mu:.62px">
+      <div class="inner">
+        <p class="a note" style="--x:315;--y:4878;--w:200">Back icon looks very outdated</p>
+        <p class="a note" style="--x:536;--y:4861;--w:172">Not even 5% of people are giving the profile picture</p>
+        <p class="a note" style="--x:982;--y:4858;--w:142">The icons are a darker color of purple ,why ?</p>
+        <p class="a note flat" style="--x:1202;--y:4854;--w:173">The icon colors look really off and readability is zero</p>
+        <p class="a note" style="--x:1565;--y:4859;--w:142">once user is told all is setup ,then there is no nudge to start a call</p>
+        <img class="a dd" style="--x:336;--y:4929;--w:22.66" src="assets/work/peerup/dd-1.svg" alt="">
+        <img class="a dd" style="--x:1003;--y:4920;--w:15.71;rotate:93.5deg" src="assets/work/peerup/dd-2.svg" alt="">
+        <img class="a dd" style="--x:569;--y:4961;--w:38.14;rotate:-57.2deg" src="assets/work/peerup/dd-3.svg" alt="">
+        <img class="a dd" style="--x:1590;--y:5156;--w:75.77;rotate:-26.4deg" src="assets/work/peerup/dd-4.svg" alt="">
+        <img class="a" style="--x:97;--y:4934;--w:191" src="assets/work/peerup/of-name.webp" width="383" height="839" alt="Original screen: name" loading="lazy">
+        <img class="a" style="--x:320;--y:4934;--w:191" src="assets/work/peerup/of-age.webp" width="383" height="839" alt="Original screen: age" loading="lazy">
+        <img class="a" style="--x:542;--y:4934;--w:191" src="assets/work/peerup/of-pic.webp" width="383" height="839" alt="Original screen: profile picture" loading="lazy">
+        <img class="a" style="--x:764;--y:4934;--w:192" src="assets/work/peerup/of-level.webp" width="384" height="840" alt="Original screen: English level" loading="lazy">
+        <img class="a" style="--x:987;--y:4934;--w:191" src="assets/work/peerup/of-job.webp" width="381" height="840" alt="Original screen: work profile" loading="lazy">
+        <img class="a" style="--x:1209;--y:4934;--w:191" src="assets/work/peerup/of-interests.webp" width="381" height="840" alt="Original screen: interests" loading="lazy">
+        <img class="a" style="--x:1431;--y:4934;--w:191" src="assets/work/peerup/of-setup.webp" width="383" height="839" alt="Original screen: setup complete" loading="lazy">
+        <img class="a" style="--x:1653;--y:4934;--w:192" src="assets/work/peerup/of-home.webp" width="384" height="840" alt="Original home screen" loading="lazy">
+        <p class="a label" style="--x:171;--y:5373;--w:60">Name</p>
+        <p class="a label" style="--x:402;--y:5373;--w:40">Age</p>
+        <p class="a label" style="--x:563;--y:5373;--w:180">Getting a profile picture</p>
+        <p class="a label" style="--x:799;--y:5373;--w:150">Learning their level</p>
+        <p class="a label" style="--x:1039;--y:5373;--w:100">Professions</p>
+        <p class="a label" style="--x:1251;--y:5373;--w:120">Other interests</p>
+        <p class="a label" style="--x:1456;--y:5373;--w:160">Knowledge on setup</p>
+        <p class="a label" style="--x:1706;--y:5373;--w:110">Home screen</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Problems ===== -->
+  <section class="sec" aria-labelledby="pr-h">
+    <h2 id="pr-h" class="a t b h-big" style="--x:101;--y:5579;--w:1000;--fs:100;--lh:40">Problems Identified</h2>
+    <ul class="a t list" style="--x:97;--y:5720;--w:1422;--fs:37;--lh:45">
+      <li>There was a <span class="hl">drop-off of 17% after the onboarding</span> was complete .</li>
+      <li>Although it’s a spoken-first app, that point wasn’t communicated clearly to users</li>
+      <li>The users didn't find the app pleasing, they were not delighted with the experience</li>
+      <li>Its was not clear what to do when a user arrives at the home page</li>
+    </ul>
+  </section>
+
+  <!-- ===== Goals ===== -->
+  <section class="sec" aria-labelledby="go-h">
+    <h2 id="go-h" class="a t b h-big" style="--x:116;--y:6234;--w:900;--fs:100;--lh:40">Goals to work on</h2>
+    <div class="goals">
+      <div class="goal" style="display:contents">
+        <img class="a" style="--x:116;--y:6388;--w:75" src="assets/work/peerup/g-eyes.webp" width="150" height="133" alt="">
+        <p class="a t sb" style="--x:116;--y:6494;--w:700;--fs:35;--lh:40">Introduce the apps features and values</p>
+        <div class="a rule" style="--x:116;--y:6550;--w:370"></div>
+      </div>
+      <div class="goal" style="display:contents">
+        <img class="a" style="--x:932;--y:6398;--w:75" src="assets/work/peerup/g-coin.webp" width="150" height="150" alt="">
+        <p class="a t sb" style="--x:932;--y:6493;--w:958;--fs:35;--lh:43">Include feature dedicated pricing and purchase screens</p>
+        <div class="a rule" style="--x:1213;--y:6553;--w:396"></div>
+      </div>
+      <div class="goal" style="display:contents">
+        <img class="a" style="--x:116;--y:6683;--w:56" src="assets/work/peerup/g-flow.webp" width="112" height="112" alt="">
+        <p class="a t sb" style="--x:116;--y:6759;--w:700;--fs:35;--lh:40">Keep the flow short—5 to 7 screens max</p>
+        <div class="a rule" style="--x:259;--y:6815;--w:370"></div>
+      </div>
+      <div class="goal" style="display:contents">
+        <img class="a" style="--x:934;--y:6660;--w:75" src="assets/work/peerup/g-sliders.webp" width="150" height="150" alt="">
+        <p class="a t sb" style="--x:931;--y:6755;--w:900;--fs:36;--lh:40">Make onboarding feel personal to each user’s goals.</p>
+        <div class="a rule" style="--x:1172;--y:6811;--w:370"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Experiments ===== -->
+  <section class="sec" aria-labelledby="ex-h">
+    <h2 id="ex-h" class="a t b h-big" style="--x:116;--y:7061;--w:700;--fs:100;--lh:40">Experiments</h2>
+    <div class="stage" style="--sox:100;--soy:7190;--sw:1810;--sh:650;--mu:.5px">
+      <div class="inner">
+        <img class="a" style="--x:119;--y:7243;--w:366" src="assets/work/peerup/x-card1.webp" width="733" height="1158" alt="Experiment 1: use side-by-side cards for each feature: Feature, How it helps, When to use." loading="lazy">
+        <img class="a" style="--x:553;--y:7246;--w:360" src="assets/work/peerup/x-card2.webp" width="721" height="1164" alt="Experiment 2: include a step that lets users skip personalization." loading="lazy">
+        <img class="a" style="--x:981;--y:7255;--w:365" src="assets/work/peerup/x-card3.webp" width="730" height="1144" alt="Experiment 3: use the main AI character, Miss Maya, to show what the app has to offer." loading="lazy">
+        <img class="a" style="--x:1420;--y:7294;--w:360" src="assets/work/peerup/x-card4.webp" width="720" height="1056" alt="" loading="lazy">
+        <p class="a t sb x-text" style="--x:1437;--y:7488;--w:315;--fs:31;--lh:40">Initiating a call before the onboarding ends that people can be activated and have a feel of the the app before they reach the home page.</p>
+        <img class="a x-pin" style="--x:1730;--y:7228;--w:76" src="assets/work/peerup/x-pin4.webp" width="153" height="190" alt="" loading="lazy">
+        <img class="a x-stamp" style="--x:1570;--y:7206;--w:320" src="assets/work/peerup/x-stamp.webp" width="640" height="354" alt="Finalised solution" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Experiment screens ===== -->
+  <section class="sec" aria-labelledby="es-h">
+    <h2 id="es-h" class="a t b h-big" style="--x:104;--y:8095;--w:1000;--fs:100;--lh:40">Experiment screens</h2>
+
+    <h3 class="a t b h-sm" style="--x:104;--y:8267;--w:997;--fs:60;--lh:40">Experiment 1</h3>
+    <p class="a t rg" style="--x:104;--y:8323;--w:1240;--fs:34;--lh:38">Use side-by-side cards for each feature: <b>Feature, How it helps, When to use</b></p>
+    <div class="row">
+      <img class="a" style="--x:105;--y:8459;--w:374" src="assets/work/peerup/e1-a.webp" width="748" height="1518" alt="Experiment 1: what feature are you excited about?" loading="lazy">
+      <img class="a" style="--x:558;--y:8459;--w:374" src="assets/work/peerup/e1-b.webp" width="748" height="1518" alt="Experiment 1: practise with humans card" loading="lazy">
+      <img class="a" style="--x:1011;--y:8459;--w:374" src="assets/work/peerup/e1-c.webp" width="748" height="1519" alt="Experiment 1: practise with AI characters card" loading="lazy">
+      <img class="a" style="--x:1464;--y:8449;--w:374" src="assets/work/peerup/e1-d.webp" width="748" height="1518" alt="Experiment 1: beginner English course card" loading="lazy">
+    </div>
+    <p class="a t sb" style="--x:108;--y:9321;--w:1692;--fs:36;--lh:47">Once the user has been asked about his lifestyle and day to day choices ,he is asked that what feature will excite him the most in a way that he is informed about the features as well as get information that what feature excites him the most .More information about the feature he selected is given to him</p>
+    <p class="a t b" style="--x:118;--y:9580;--w:1500;--fs:36;--lh:40;font-style:italic">Experiment&nbsp; 2 was not carried out because that was not fulfilling our innate principals</p>
+
+    <h3 class="a t b h-sm" style="--x:118;--y:9752;--w:997;--fs:60;--lh:40">Experiment 3</h3>
+    <p class="a t rg" style="--x:118;--y:9808;--w:1500;--fs:34;--lh:40">Use your main ai character as well as our mascot , miss maya to show what all app has to offer.</p>
+    <div class="row">
+      <img class="a" style="--x:148;--y:9946;--w:374" src="assets/work/peerup/e3-a.webp" width="748" height="1534" alt="Experiment 3: Miss Maya speaking" loading="lazy">
+      <img class="a" style="--x:699;--y:9946;--w:374" src="assets/work/peerup/e3-b.webp" width="748" height="1518" alt="Experiment 3: Miss Maya lists the features" loading="lazy">
+      <img class="a" style="--x:1269;--y:9946;--w:374" src="assets/work/peerup/e3-c.webp" width="748" height="1518" alt="Experiment 3: user picks an AI call" loading="lazy">
+    </div>
+
+    <h3 class="a t b h-sm" style="--x:119;--y:10845;--w:1645;--fs:60;--lh:40">Experiment 4</h3>
+    <p class="a t rg" style="--x:119;--y:10901;--w:1573;--fs:34;--lh:40">Initiating a call before the onboarding ends so&nbsp; that people can be activated and have a feel of the the app before they reach the home page.</p>
+    <div class="row">
+      <img class="a" style="--x:144;--y:11079;--w:421" src="assets/work/peerup/e4-a.webp" width="842" height="1662" alt="Experiment 4: AI call begins during onboarding" loading="lazy">
+      <img class="a" style="--x:699;--y:11079;--w:421" src="assets/work/peerup/e4-b.webp" width="842" height="1662" alt="Experiment 4: user's turn to speak" loading="lazy">
+      <img class="a" style="--x:1254;--y:11079;--w:421" src="assets/work/peerup/e4-c.webp" width="842" height="1662" alt="Experiment 4: speak for at least two minutes to receive feedback" loading="lazy">
+    </div>
+
+    <p class="a t b" style="--x:119;--y:12070;--w:1692;--fs:36;--lh:40">A human interaction/call was also thought upon but an AI call in onboarding was finalized because</p>
+    <div class="num-grid" style="display:contents">
+      <img class="a" style="--x:131;--y:12190;--w:335" src="assets/work/peerup/n-1.webp" width="670" height="436" alt="01: Users might feel uncomfortable and that can end up in bad calls" loading="lazy">
+      <img class="a" style="--x:551;--y:12190;--w:335" src="assets/work/peerup/n-2.webp" width="670" height="436" alt="02: Human call asks for gender preference in the start, which adds another step that can lead to drop-off" loading="lazy">
+      <img class="a" style="--x:957;--y:12193;--w:335" src="assets/work/peerup/n-3.webp" width="670" height="436" alt="03: AI calls help you explore more, with clear awareness that there isn't a real person on the other end" loading="lazy">
+      <img class="a" style="--x:1370;--y:12190;--w:335" src="assets/work/peerup/n-4.webp" width="670" height="436" alt="04: A guide's presence makes the call feel comfortable and reduces the chance of a bad experience" loading="lazy">
+    </div>
+  </section>
+
+  <!-- ===== Finalized flow ===== -->
+  <section class="sec" aria-labelledby="ff-h">
+    <h2 id="ff-h" class="a t b h-mid" style="--x:113;--y:12568;--w:600;--fs:64;--lh:40">Finalized flow</h2>
+    <div class="flow-grid" style="display:contents">
+      <img class="a" style="--x:82;--y:12692;--w:417" src="assets/work/peerup/f-1.webp" width="834" height="1704" alt="Final flow 1: what is your name?" loading="lazy">
+      <img class="a" style="--x:529;--y:12692;--w:417" src="assets/work/peerup/f-2.webp" width="834" height="1704" alt="Final flow 2: set up your profile picture" loading="lazy">
+      <img class="a" style="--x:976;--y:12692;--w:417" src="assets/work/peerup/f-3.webp" width="834" height="1704" alt="Final flow 3: what are you currently doing?" loading="lazy">
+      <img class="a" style="--x:1423;--y:12692;--w:417" src="assets/work/peerup/f-4.webp" width="834" height="1704" alt="Final flow 4: what is your work profile?" loading="lazy">
+      <img class="a" style="--x:89;--y:13773;--w:417" src="assets/work/peerup/f-5.webp" width="834" height="1704" alt="Final flow 5: choose 3 or more interests" loading="lazy">
+      <img class="a" style="--x:526;--y:13773;--w:417" src="assets/work/peerup/f-6.webp" width="834" height="1704" alt="Final flow 6: special offer, 75% off Pro" loading="lazy">
+      <img class="a" style="--x:974;--y:13773;--w:417" src="assets/work/peerup/f-7.webp" width="834" height="1704" alt="Final flow 7: become a Pro member" loading="lazy">
+      <img class="a" style="--x:1428;--y:13773;--w:417" src="assets/work/peerup/f-8.webp" width="834" height="1704" alt="Final flow 8: first AI call with Miss Maya" loading="lazy">
+    </div>
+  </section>
+
+  <!-- ===== Changes in between ===== -->
+  <section class="sec" aria-labelledby="ch-h">
+    <h2 id="ch-h" class="a t b h-mid" style="--x:118;--y:14777;--w:700;--fs:64;--lh:40">Changes in between</h2>
+    <h3 class="a t b h-sm" style="--x:124;--y:14901;--w:400;--fs:36;--lh:40">Icon Changes</h3>
+    <p class="a t rg" style="--x:123;--y:14954;--w:1687;--fs:30;--lh:40">The icons lacked visual appeal, the heavy purple made the screens look dull. After reviewing competitor apps, we switched to colored icons to add liveliness and improve contrast.</p>
+    <div class="stage fit" style="--sox:170;--soy:15255;--sw:1560;--sh:560;--mu:calc((100cqw - 48px) / 1560)">
+      <div class="inner">
+        <img class="a" style="--x:182;--y:15359;--w:196" src="assets/work/peerup/c-s1.webp" width="393" height="833" alt="" loading="lazy">
+        <img class="a" style="--x:335;--y:15265;--w:195" src="assets/work/peerup/c-s2.webp" width="391" height="919" alt="" loading="lazy">
+        <img class="a" style="--x:472;--y:15384;--w:196" src="assets/work/peerup/c-s3.webp" width="393" height="833" alt="Onboarding screens with the old purple icons" loading="lazy">
+        <img class="a" style="--x:785;--y:15271;--w:397" src="assets/work/peerup/c-old.webp" width="794" height="1062" alt="Old icons: heavy purple tiles" loading="lazy">
+        <svg class="a glow-up" style="--x:1186;--y:15430;--w:126" viewBox="0 0 150 90" fill="none" stroke="#020252" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Glow up!"><text x="34" y="28" transform="rotate(-6 70 20)" font-family="Caveat, cursive" font-size="30" fill="#c2419d" stroke="none">glow up!</text><path d="M12 64C40 44 80 82 120 54"/><path d="M108 46l13 7-10 11"/></svg>
+        <img class="a" style="--x:1315;--y:15271;--w:393" src="assets/work/peerup/c-new.webp" width="787" height="1062" alt="New icons: coloured illustrations on white" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Happy flow ===== -->
+  <section class="sec" aria-labelledby="hf-h">
+    <h2 id="hf-h" class="a t b h-big" style="--x:166;--y:16300;--w:782;--fs:100;--lh:122">Happy flow to<br>the final concept</h2>
+    <p class="a t sb" style="--x:166;--y:16559;--w:600;--fs:40;--lh:40;color:var(--ink-2);--m:19px">(Reorder flow concept)</p>
+    <div class="stage fit" style="--sox:1060;--soy:16140;--sw:660;--sh:900;--mu:calc(min(100cqw, 420px) / 660)">
+      <div class="inner" style="margin:0 auto">
+        <img class="a" style="--x:1074;--y:16148;--w:139" src="assets/work/peerup/h-burst.svg" alt="" loading="lazy">
+        <img class="a" style="--x:1150;--y:16223;--w:416" src="assets/work/peerup/h-phone.webp" width="832" height="1626" alt="" loading="lazy">
+        <video class="a phone-video" style="--x:1185;--y:16256;--w:344" src="assets/work/peerup/happy-flow.mp4" poster="assets/work/peerup/happy-flow-poster.webp" autoplay muted loop playsinline preload="metadata" aria-label="Screen recording of the final PeerUp onboarding: name, a welcome gift, a first AI call with Miss Maya, feedback, then the home screen"></video>
+        <img class="a" style="--x:1586;--y:16173;--w:122" src="assets/work/peerup/h-arrow.svg" alt="" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" aria-label="Thank you">
+    <p class="a t b h-big thanks" style="--x:636;--y:17216;--w:700;--fs:100;--lh:122">THANK YOU !!</p>
+  </section>
+
+</main>
+</div>
+<script>
+// Respect reduced motion: show the first frame instead of autoplaying the recording
+if (matchMedia('(prefers-reduced-motion: reduce)').matches) document.querySelectorAll('video[autoplay]').forEach((v) => { v.removeAttribute('autoplay'); v.pause(); v.controls = true; });
+</script>
+</body>
+</html>
