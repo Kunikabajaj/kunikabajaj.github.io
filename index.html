@@ -17,8 +17,9 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&family=Figtree:wght@400;500;600;700&family=Anton&family=Press+Start+2P&family=Caveat+Brush&family=Fraunces:opsz,wght@9..144,900&family=Jost:wght@600;700&family=Merriweather:ital,wght@1,700&family=Instrument+Serif:ital@0;1&family=Rubik+Mono+One&family=Unbounded:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&family=Figtree:wght@400;500;600;700&family=Anton&family=Press+Start+2P&family=Caveat+Brush&family=Fraunces:opsz,wght@9..144,900&family=Jost:wght@600;700&family=Merriweather:ital,wght@1,700&family=Instrument+Serif:ital@0;1&family=Rubik+Mono+One&family=Shrikhand&family=Bowlby+One&family=Unbounded:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
+@font-face { font-family: 'Clash Display'; src: url('assets/fonts/ClashDisplay-Semibold.otf') format('opentype'); font-weight: 600; font-display: swap; }
 /* Theme colours are registered so the palette sticker can animate between them */
 @property --bg1 { syntax: '<color>'; inherits: true; initial-value: #0d0e4f; }
 @property --bg2 { syntax: '<color>'; inherits: true; initial-value: #2a2fbf; }
@@ -119,6 +120,17 @@ main { overflow-x: clip; }
   transition: transform .2s, box-shadow .2s;
 }
 .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 20px -8px rgba(0, 0, 0, .5); }
+/* A thin gradient line under the nav separates it from the page; it fades away once you scroll */
+.nav::after {
+  content: ""; position: absolute; left: clamp(16px, 3vw, 40px); right: clamp(16px, 3vw, 40px); bottom: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .35) 20%, var(--pink) 50%, rgba(255, 255, 255, .35) 80%, transparent);
+  pointer-events: none; transition: opacity .3s;
+}
+.nav.scrolled::after { opacity: 0; }
+/* Right side of the nav: plain white text links, no pill */
+.nav-right { display: flex; align-items: center; gap: clamp(18px, 2.4vw, 32px); }
+.nav-text { color: #fff; font-weight: 600; font-size: 15px; text-decoration: none; text-shadow: 0 1px 10px rgba(4, 4, 40, .45); }
+.nav-text:hover, .nav-text[aria-current] { text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 2px; }
 .nav.scrolled .brand { background: #fff; color: var(--night); box-shadow: 0 8px 24px -10px rgba(0, 0, 0, .5); }
 .nav.scrolled .nav-links { opacity: 0; transform: translate(-50%, -10px); pointer-events: none; }
 
@@ -148,8 +160,8 @@ main { overflow-x: clip; }
 }
 /* a quiet title, the big word behind her does the shouting */
 .hero h1 {
-  font: 600 clamp(1.6rem, 2.2vw, 2.3rem)/1.12 var(--body);
-  letter-spacing: -.025em;
+  font: 700 clamp(2rem, 3.1vw, 3.2rem)/1.02 var(--body);
+  letter-spacing: -.01em; text-transform: uppercase;
   margin: clamp(24px, 6vh, 64px) 0 0;
   text-wrap: balance;
   animation: rise .9s .2s cubic-bezier(.25, 1.3, .5, 1) both;
@@ -162,9 +174,21 @@ main { overflow-x: clip; }
   max-width: 44ch;
   margin: 0;
 }
-.hero .lede { margin-top: clamp(28px, 6.6vh, 70px); animation: rise .9s .3s cubic-bezier(.25, 1.3, .5, 1) both; }
+/* Letters near the pointer turn into little icons for a moment, then change back */
+.lede .lw { white-space: nowrap; }
+.lede .ch { display: inline-block; position: relative; }
+.lede .ch.pop { color: transparent; }
+.lede .ch.pop::after {
+  content: attr(data-e); position: absolute; left: 50%; top: 50%;
+  font-size: .95em; line-height: 1; color: initial;
+  translate: -50% -50%; animation: chPop .25s cubic-bezier(.3, 1.8, .5, 1) both;
+}
+@keyframes chPop { from { scale: 0; rotate: -25deg; } }
+/* The intro is the main read in the hero, so it runs larger than other ledes, growing with the screen */
+.hero .lede { font-size: clamp(1.05rem, .9rem + .45vw, 1.3rem); line-height: 1.5; }
+/* tops line up with the headline across the hero */
+.hero .lede { margin-top: clamp(24px, 6vh, 64px); animation: rise .9s .3s cubic-bezier(.25, 1.3, .5, 1) both; }
 .cta-row { display: flex; justify-content: center; flex-wrap: wrap; gap: 16px; }
-.hero .cta-row { margin-top: clamp(28px, 5vh, 48px); position: relative; z-index: 25; }
 .btn {
   display: inline-flex; align-items: center; gap: 10px;
   padding: 16px 28px; border-radius: 14px; border: 0;
@@ -178,9 +202,9 @@ main { overflow-x: clip; }
 /* Playground: you, surrounded by stickers */
 .playground {
   position: relative; height: clamp(460px, 68vh, 660px); --px: 0; --py: 0;
-  --word: min(16vw, 236px);
-  /* room for the word, which hangs below her */
-  margin-bottom: calc(var(--word) * .42);
+  --word: min(8.6vw, 128px);
+  /* room for the two lines of big words, which hang below her */
+  margin-bottom: calc(var(--word) * .7);
 }
 
 /* The ring and glow sit behind her head. Sized from her, not the column, so it keeps
@@ -223,17 +247,23 @@ main { overflow-x: clip; }
 .me:hover img, .me:focus-visible img { transform: scale(1.03) rotate(-1.5deg); }
 .me:focus-visible { outline-offset: -8px; border-radius: 40px; }
 
-/* CREATIVE MESS starts where she ends: its top edge tucks just behind her arms */
+/* The big words start where she ends: the top line tucks just behind her arms */
 .bigword {
   position: absolute; left: 50%; top: 91%; z-index: 5;
   translate: -50% -26%;
   margin: 0; white-space: nowrap; pointer-events: none;
-  font: 400 var(--word)/.78 'Anton', Impact, sans-serif;
-  letter-spacing: .005em; text-transform: uppercase;
+  font: 600 var(--word)/.86 'Clash Display', 'Anton', Impact, sans-serif;
+  letter-spacing: -.02em; text-transform: uppercase;
   color: #fff;
   text-shadow: 0 24px 60px rgba(4, 4, 40, .35);
 }
-.bigword span { display: inline-block; animation: wordRise .9s cubic-bezier(.2, 1.1, .3, 1) both; animation-delay: calc(.35s + var(--i) * 45ms); }
+.bigword .bw-line { display: block; text-align: center; }
+/* the second line is a small, spaced-out tag under the big words, led by a briefcase */
+.bigword .bw-line + .bw-line { white-space: normal; }
+.bigword .bw-tag { display: inline-block; white-space: nowrap; margin: .35em .6em 0; }
+.bigword .bw-ic { display: inline-block; width: 1.5em; height: auto; vertical-align: -.32em; margin-right: .55em; animation: wordRise .9s .35s cubic-bezier(.2, 1.1, .3, 1) both; }
+.bigword .bw-line + .bw-line { font-size: max(.26em, 12px); letter-spacing: .1em; margin-top: max(.8em, 12px); color: var(--ink-soft); }
+.bigword .bw-ch { display: inline-block; animation: wordRise .9s cubic-bezier(.2, 1.1, .3, 1) both; animation-delay: calc(.35s + var(--i) * 30ms); }
 @keyframes wordRise { from { transform: translateY(40%); opacity: 0; } to { transform: none; opacity: 1; } }
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes rise { from { transform: translateY(60px); opacity: 0; } to { transform: none; opacity: 1; } }
@@ -241,8 +271,8 @@ main { overflow-x: clip; }
 
 /* Stickers */
 .sticker {
-  position: absolute; left: 0; top: 0; z-index: 20;
-  width: calc(var(--sticker) * var(--size, 1)); height: calc(var(--sticker) * var(--size, 1));
+  position: absolute; left: 0; top: 0; z-index: 8;
+  width: calc(var(--sticker) * var(--size, 1) * var(--ps, 1)); height: calc(var(--sticker) * var(--size, 1) * var(--ps, 1));
   padding: 0; border: 0; background: none;
   cursor: pointer; touch-action: none; user-select: none;
   -webkit-tap-highlight-color: transparent;
@@ -261,16 +291,28 @@ main { overflow-x: clip; }
     drop-shadow(0 16px 14px rgba(6, 6, 40, .4));
 }
 /* Midjourney renders: no die-cut outline, just a soft glow */
-.sticker img, .peek img, .drift img {
+.sticker img, .drift img {
   display: block; width: 100%; height: 100%; object-fit: contain;
   -webkit-user-drag: none; user-select: none; pointer-events: none;
 }
-.sticker img, .peek img {
+.sticker img {
   filter: drop-shadow(0 0 14px color-mix(in srgb, var(--pink) 45%, transparent)) drop-shadow(0 16px 14px rgba(6, 6, 40, .45));
 }
 .sticker:hover .lift, .sticker:focus-visible .lift { transform: scale(1.06) rotate(-3deg); }
 .sticker.dragging .lift { transform: scale(1.1); }
 .sticker:focus-visible { outline-offset: 8px; border-radius: 28px; }
+/* Word sticker palette (Retro pop), on :root so the blurred drift copies get it too */
+:root { --st-a: #ff6a2b; --st-a2: #ffa56b; --st-b: #fde7c4; --st-b-ink: #b3263b; --st-c: #e2318f; --st-c2: #ff4fa3;
+  --st-d: #33dfae; --st-e: #ffa62b; --st-e2: #ffd23f; --st-f: #c7a6ff; --st-ink: #24104a; --st-face: #fff; }
+/* Phones: she fills the width, so the stickers shrink to fit the gaps beside her head */
+@media (max-width: 699px) { .sticker { --ps: .8; } }
+@media (max-width: 400px) { .sticker { --ps: .72; } }
+/* Word stickers are flat: no die-cut outline, no shadow */
+.sticker svg { filter: none; }
+/* One-point perspective: each sticker leans away toward a vanishing point at her centre, a step behind her */
+.sticker .lift { transform: perspective(700px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) scale(.86); }
+.sticker:hover .lift, .sticker:focus-visible .lift { transform: perspective(700px) rotateX(calc(var(--rx, 0deg) * .5)) rotateY(calc(var(--ry, 0deg) * .5)) scale(.94); }
+.sticker.dragging .lift { transform: perspective(700px) scale(1.02); }
 @keyframes bob {
   0%, 100% { transform: translateY(0) rotate(0deg); }
   50% { transform: translateY(-4px) rotate(1.2deg); }
@@ -350,8 +392,6 @@ main { overflow-x: clip; }
 .card h3 { font-size: calc(clamp(1.6rem, 3vw, 2.5rem) * var(--display-scale)); line-height: 1; margin: 0 0 14px; }
 .card .kind { margin: 0 0 10px; font-weight: 600; color: var(--sun); }
 .card p.desc { margin: 0 0 24px; color: var(--ink-soft); font-size: 1.05rem; line-height: 1.55; max-width: 40ch; }
-.peek { position: absolute; top: -54px; width: 84px; height: 84px; pointer-events: none; }
-.peek svg { width: 100%; height: 100%; filter: drop-shadow(3px 0 0 #fff) drop-shadow(-3px 0 0 #fff) drop-shadow(0 3px 0 #fff) drop-shadow(0 -3px 0 #fff) drop-shadow(0 12px 10px rgba(6, 6, 40, .35)); }
 
 /* ---------- Contact ---------- */
 .contact { text-align: center; padding: clamp(40px, 8vw, 96px) var(--gutter) 64px; }
@@ -576,20 +616,25 @@ main { overflow-x: clip; }
   .nav-links { display: none; }
   .hero { padding-top: 96px; }
   .hero-grid { grid-template-columns: 1fr; grid-template-areas: "title" "lede" "me"; gap: 0; }
-  .hero h1 { margin-top: 12px; font-size: clamp(1.9rem, 7.4vw, 2.6rem); }
-  .hero .lede { margin-top: 16px; }
+  /* Phones: centred, "Up late," on one line and "designing things." on the next */
+  .hero h1 { margin-top: 12px; font-size: clamp(1.6rem, 8.1vw, 3.4rem); text-align: center; }
+  .hero h1 .h-a, .hero h1 .h-b { display: block; white-space: nowrap; }
+  .hero .lede { margin-top: 16px; font-size: clamp(1.08rem, .85rem + 1.3vw, 1.3rem); }
 
   .playground { height: 480px; }
   .card, .card.flip { grid-template-columns: 1fr; padding: 14px 14px 28px; border-radius: 36px; }
   .card.flip .panel { order: 0; }
   .card-copy { padding: 0 10px; }
   .panel { border-radius: 26px; }
-  .peek { width: 64px; height: 64px; top: -42px; }
 }
 
 @media (max-width: 560px) {
   /* the word runs about 5.7em wide: size it to sit inside the same side margins as the text */
-  .playground { --word: calc((100vw - 2 * var(--gutter)) / 5.75); }
+  .playground { --word: calc((100vw - 2 * var(--gutter)) / 10.2); }
+  /* both tags on one line: sized from the screen width so the pair always fits */
+  .bigword .bw-line + .bw-line { white-space: nowrap; letter-spacing: .03em; font-size: calc((100vw - 2 * var(--gutter)) / 33); }
+  .bigword .bw-tag { margin: .3em .45em 0; }
+  .bigword .bw-ic { width: 1.4em; margin-right: .4em; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001s !important; animation-iteration-count: 1 !important; transition-duration: .001s !important; }
@@ -609,20 +654,16 @@ main { overflow-x: clip; }
 
 <div class="sky" aria-hidden="true"></div>
 <canvas id="stars" aria-hidden="true"></canvas>
-<div class="drift d1" data-art="type" aria-hidden="true"></div>
-<div class="drift d2" data-art="compass" aria-hidden="true"></div>
-<div class="drift d3" data-art="book" aria-hidden="true"></div>
 
 <header class="nav" id="nav">
   <a class="brand" href="#top" aria-label="Kunika Bajaj, back to top">
     <svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4C54 34 66 46 96 50 66 54 54 66 50 96 46 66 34 54 4 50 34 46 46 34 50 4Z" fill="currentColor"/></svg>
     Kunika Bajaj
   </a>
-  <ul class="nav-links">
-    <li><a href="#work">Work</a></li>
-    <li><a href="#contact">About</a></li>
-  </ul>
-  <a class="nav-cta" href="assets/Kunika-Bajaj-Resume.pdf" target="_blank" rel="noopener">Resume</a>
+  <div class="nav-right">
+    <a class="nav-text" href="about.html">About me</a>
+    <a class="nav-text" href="assets/Kunika-Bajaj-Resume.pdf" target="_blank" rel="noopener">Resume</a>
+  </div>
 </header>
 
 <main id="top">
@@ -631,8 +672,8 @@ main { overflow-x: clip; }
 
     <div class="hero-grid">
       <div class="hero-copy">
-        <h1>Up late, <em>designing</em> things.</h1>
-        <p class="lede">I’m Kunika, a hands-on product designer. From the first user interview to the last perfect pixel, I enjoy every part of the craft. AI helps me go from idea to working prototype in hours, not weeks, so I can spend more time on the details that make a product feel awesome.</p>
+        <h1><span class="h-a">Up late,</span> <span class="h-b"><em>designing</em> things.</span></h1>
+        <p class="lede">I’m Kunika, a hands-on product designer. A curious soul who likes to experiment with things. I find different styles to explore as well as different making them perfect overall . I love to work and get the grunty work done and concentrate more on the details and the business impact it makes.</p>
       </div>
 
       <div class="playground" id="playground">
@@ -642,20 +683,16 @@ main { overflow-x: clip; }
               <span class="glow"></span>
               <svg class="ring" viewBox="0 0 200 200">
                 <defs><path id="ringPath" d="M100 100m-90 0a90 90 0 1 1 180 0a90 90 0 1 1-180 0"/></defs>
-                <text><textPath href="#ringPath" textLength="560">KUNIKA ✦ PRODUCT DESIGNER ✦ KUNIKA ✦ PRODUCT DESIGNER ✦</textPath></text>
+                <text><textPath href="#ringPath" textLength="560">KUNIKA ✦ NOSY HUMAN ✦ KUNIKA ✦ NOSY HUMAN ✦ KUNIKA ✦ NOSY HUMAN ✦</textPath></text>
               </svg>
             </span>
             <img src="assets/kunika-3d.webp" alt="3D illustration of Kunika in a lilac hoodie, making a peace sign" width="1000" height="1294">
           </span>
         </button>
-        <p class="bigword" aria-label="Creative mess">CREATIVE MESS</p>
+        <p class="bigword" aria-label="Product designer. B2B and B2C industries. 3+ years of experience.">PRODUCT DESIGNER|briefcase:B2B &amp; B2C INDUSTRIES~laptop:3+ YEARS OF EXPERIENCE</p>
       </div>
     </div>
 
-    <div class="cta-row">
-      <a class="btn btn-light" href="#work">See my work</a>
-      <a class="btn btn-accent" href="mailto:kunikabajaj29@gmail.com">Let's work together</a>
-    </div>
 
     <div class="bubble" id="bubble" aria-hidden="true"></div>
     <p class="sr-only" id="live" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)"></p>
@@ -669,7 +706,6 @@ main { overflow-x: clip; }
     <h2 class="section-title display">Featured work</h2>
 
     <article class="card" style="--pa:#ff7ad9;--pb:#7b2fd1">
-      <span class="peek" data-art="pencil" style="right:14%" aria-hidden="true"></span>
       <a class="panel cover" href="peerup.html" aria-label="Open the PeerUp case study">
         <img src="assets/work/peerup-cover.webp" alt="PeerUp onboarding: a phone showing Miss Maya, the AI mentor, greeting a new learner on a voice call" width="1306" height="986" loading="lazy">
       </a>
@@ -682,7 +718,6 @@ main { overflow-x: clip; }
     </article>
 
     <article class="card flip" style="--pa:#3ee6a8;--pb:#0b6e78">
-      <span class="peek" data-art="palette" style="left:12%" aria-hidden="true"></span>
       <a class="panel cover" href="refo.html" aria-label="Open the REFO case study">
         <img src="assets/work/refo-cover.webp?v=2" alt="REFO dashboard on a laptop, showing a relationship manager's active loan cases, their value and how long each has been waiting" width="1306" height="986" loading="lazy">
       </a>
@@ -695,7 +730,6 @@ main { overflow-x: clip; }
     </article>
 
     <article class="card" style="--pa:#ffb36b;--pb:#e0457b">
-      <span class="peek" data-art="book" style="right:18%" aria-hidden="true"></span>
       <a class="panel cover" href="homeys.html" aria-label="Open the Homeys case study">
         <img src="assets/work/homeys-cover.webp" alt="Homeys app on a phone, showing a furnished home listing with an 88% vibe match, under the words This Feels Right" width="1306" height="986" loading="lazy">
       </a>
@@ -728,7 +762,7 @@ main { overflow-x: clip; }
    ============================================================ */
 const CONFIG = {
   hello: "Hi, I'm Kunika. Have a look around.",
-  marquee: ['Product design', 'Design systems', 'User flows', 'Brand identity'],
+  marquee: ['Visual elements', 'AI prototyping', 'Design systems', 'User flows', 'Brand identity'],
 };
 
 const FONTS = [
@@ -745,32 +779,42 @@ const THEMES = [
   { name: 'Berry', bg1: '#24082f', bg2: '#74208c', bg3: '#d84bb5', accent: '#b52a8f' },
 ];
 
-/* Sticker artwork. Swap any of these for a Midjourney PNG: '<img src="file.png" alt="">' */
+/* Sticker artwork: flat word stickers in retro type. The earlier 3D set is kept as *Render, the vector set as *Flat */
 const ART = {
-  book: `<img src="assets/stickers/book.webp" alt="" draggable="false">`,
+  book: `<svg viewBox="0 0 120 120"><g transform="rotate(-14 60 60)"><ellipse cx="60" cy="60" rx="57" ry="36" style="fill:var(--st-a)"/><g fill="none" style="stroke:var(--st-a2)" stroke-width="1.6"><ellipse cx="60" cy="60" rx="52" ry="31"/><ellipse cx="60" cy="60" rx="24" ry="31"/><path d="M8 60h104M14 45c30 6 62 6 92 0M14 75c30-6 62-6 92 0"/></g><text x="58" y="72" text-anchor="middle" font-family="Shrikhand, serif" font-size="30" style="fill:var(--st-ink)" transform="translate(2.4 2.4)">READ</text><text x="58" y="72" text-anchor="middle" font-family="Shrikhand, serif" font-size="30" style="fill:var(--st-face)">READ</text><text x="98" y="48" font-family="Figtree, sans-serif" font-weight="700" font-size="11" style="fill:var(--st-face)">&#174;</text></g></svg>`,
+  bookRender: `<img src="assets/stickers/book.webp" alt="" draggable="false">`,
   bookFlat: `<svg viewBox="0 0 100 100"><defs><linearGradient id="gBook" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff9ae0"/><stop offset="1" stop-color="#c2359f"/></linearGradient></defs><g transform="rotate(-8 50 50)"><rect x="24" y="17" width="56" height="70" rx="8" fill="#fff1dc"/><path d="M30 82h46M30 78h46" stroke="#e6cfae" stroke-width="1.5"/><rect x="18" y="12" width="56" height="70" rx="8" fill="url(#gBook)"/><rect x="18" y="12" width="11" height="70" rx="5" fill="#9b2486" opacity=".45"/><path d="M58 12v24l6-5 6 5V12z" fill="#ffd34d"/><rect x="35" y="40" width="30" height="5" rx="2.5" fill="#fff" opacity=".85"/><rect x="35" y="50" width="19" height="5" rx="2.5" fill="#fff" opacity=".6"/><ellipse cx="42" cy="21" rx="12" ry="3.5" fill="#fff" opacity=".35"/></g></svg>`,
-  gym: `<img src="assets/stickers/gym.webp" alt="" draggable="false">`,
+  gym: `<svg viewBox="0 0 120 120"><g transform="rotate(10 60 60)"><path d="M108.0 60.0L98.6 70.4L101.6 84.0L88.3 88.3L84.0 101.6L70.4 98.6L60.0 108.0L49.6 98.6L36.0 101.6L31.7 88.3L18.4 84.0L21.4 70.4L12.0 60.0L21.4 49.6L18.4 36.0L31.7 31.7L36.0 18.4L49.6 21.4L60.0 12.0L70.4 21.4L84.0 18.4L88.3 31.7L101.6 36.0L98.6 49.6Z" stroke-width="6" stroke-linejoin="round" style="fill:var(--st-d);stroke:var(--st-d)"/><text x="60" y="58" text-anchor="middle" font-family="'Bowlby One', sans-serif" font-size="22" style="fill:var(--st-ink)">GYM</text><text x="60" y="76" text-anchor="middle" font-family="'Bowlby One', sans-serif" font-size="13" style="fill:var(--st-ink)">RAT</text></g></svg>`,
+  gymRender: `<img src="assets/stickers/gym.webp" alt="" draggable="false">`,
   gymFlat: `<svg viewBox="0 0 100 100"><defs><linearGradient id="gDb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7dfbcb"/><stop offset="1" stop-color="#0fae78"/></linearGradient></defs><g transform="rotate(-24 50 50)"><rect x="22" y="45" width="56" height="10" rx="5" fill="#d7dbff"/><rect x="8" y="27" width="15" height="46" rx="7" fill="url(#gDb)"/><rect x="23" y="34" width="9" height="32" rx="4.5" fill="url(#gDb)"/><rect x="77" y="27" width="15" height="46" rx="7" fill="url(#gDb)"/><rect x="68" y="34" width="9" height="32" rx="4.5" fill="url(#gDb)"/><rect x="11" y="31" width="4" height="22" rx="2" fill="#fff" opacity=".55"/><rect x="80" y="31" width="4" height="22" rx="2" fill="#fff" opacity=".55"/></g></svg>`,
-  pencil: `<img src="assets/stickers/pencil.webp" alt="" draggable="false">`,
+  pencil: `<svg viewBox="0 0 120 120"><g transform="rotate(-14 60 60)" font-family="'Press Start 2P', monospace" font-size="17" text-anchor="middle"><text x="64.8" y="72.8" style="fill:var(--st-c)">SKETCH</text><text x="64" y="72" style="fill:var(--st-c)">SKETCH</text><text x="63.2" y="71.2" style="fill:var(--st-c)">SKETCH</text><text x="62.4" y="70.4" style="fill:var(--st-c)">SKETCH</text><text x="61.6" y="69.6" style="fill:var(--st-c)">SKETCH</text><text x="60.8" y="68.8" style="fill:var(--st-c)">SKETCH</text><text x="60" y="68" style="fill:var(--st-face)">SKETCH</text></g></svg>`,
+  pencilRender: `<img src="assets/stickers/pencil.webp" alt="" draggable="false">`,
   pencilFlat: `<svg viewBox="0 0 100 100"><defs><linearGradient id="gPen" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffe27a"/><stop offset="1" stop-color="#ffb627"/></linearGradient></defs><g transform="rotate(40 50 50)"><rect x="40" y="6" width="20" height="16" rx="6" fill="#ff8fb8"/><rect x="39" y="18" width="22" height="8" rx="2" fill="#cfd4ff"/><rect x="40" y="26" width="20" height="44" fill="url(#gPen)"/><rect x="44" y="26" width="4" height="44" fill="#fff" opacity=".45"/><path d="M40 70h20L50 93z" fill="#ffdcb0"/><path d="M46.2 85h7.6L50 93z" fill="#2b2557"/></g></svg>`,
-  type: `<img src="assets/stickers/type.webp" alt="" draggable="false">`,
+  type: `<svg viewBox="0 0 120 120"><g transform="rotate(9 60 60)"><rect x="4" y="40" width="112" height="40" rx="20" style="fill:var(--st-b)"/><text x="60" y="68" text-anchor="middle" font-family="'Bowlby One', sans-serif" font-size="17" letter-spacing="-.3" style="fill:var(--st-b-ink)">FONT NERD</text><text x="108" y="56" font-family="Figtree, sans-serif" font-weight="700" font-size="6" style="fill:var(--st-b-ink)">&#174;</text></g></svg>`,
+  typeRender: `<img src="assets/stickers/type.webp" alt="" draggable="false">`,
   typeFlat: `<svg viewBox="0 0 100 100"><defs><linearGradient id="gType" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8f9bff"/><stop offset="1" stop-color="#4a3fd6"/></linearGradient></defs><g transform="rotate(7 50 50)"><rect x="12" y="12" width="76" height="76" rx="20" fill="url(#gType)"/><rect x="21" y="19" width="36" height="6" rx="3" fill="#fff" opacity=".3"/><text x="50" y="66" text-anchor="middle" font-size="38" fill="#fff" style="font-family:var(--display);font-weight:var(--display-weight)">Aa</text></g></svg>`,
-  palette: `<img src="assets/stickers/palette.webp" alt="" draggable="false">`,
+  palette: `<svg viewBox="0 0 120 120"><g transform="rotate(-6 60 60)" font-family="'Bricolage Grotesque', sans-serif" font-weight="800" font-size="31" letter-spacing="-1"><text x="4" y="72" style="fill:var(--st-ink)" transform="translate(2 2.4)">C</text><text x="4" y="72" style="fill:var(--st-a)">C</text><text x="22.6" y="64" style="fill:var(--st-ink)" transform="translate(2 2.4)">O</text><text x="22.6" y="64" style="fill:var(--st-b)">O</text><text x="41.2" y="72" style="fill:var(--st-ink)" transform="translate(2 2.4)">L</text><text x="41.2" y="72" style="fill:var(--st-c2)">L</text><text x="59.800000000000004" y="64" style="fill:var(--st-ink)" transform="translate(2 2.4)">O</text><text x="59.800000000000004" y="64" style="fill:var(--st-d)">O</text><text x="78.4" y="72" style="fill:var(--st-ink)" transform="translate(2 2.4)">U</text><text x="78.4" y="72" style="fill:var(--st-e2)">U</text><text x="97" y="64" style="fill:var(--st-ink)" transform="translate(2 2.4)">R</text><text x="97" y="64" style="fill:var(--st-f)">R</text></g></svg>`,
+  paletteRender: `<img src="assets/stickers/palette.webp" alt="" draggable="false">`,
   paletteFlat: `<svg viewBox="0 0 100 100"><g transform="translate(50 86)"><g transform="rotate(-38)"><rect x="-10" y="-68" width="20" height="64" rx="6" fill="#ff5fcf"/><rect x="-7" y="-24" width="14" height="12" rx="2" fill="#fff" opacity=".9"/></g><g transform="rotate(-13)"><rect x="-10" y="-68" width="20" height="64" rx="6" fill="#ffd34d"/><rect x="-7" y="-24" width="14" height="12" rx="2" fill="#fff" opacity=".9"/></g><g transform="rotate(13)"><rect x="-10" y="-68" width="20" height="64" rx="6" fill="#33e1a1"/><rect x="-7" y="-24" width="14" height="12" rx="2" fill="#fff" opacity=".9"/></g><g transform="rotate(38)"><rect x="-10" y="-68" width="20" height="64" rx="6" fill="#5b8cff"/><rect x="-7" y="-24" width="14" height="12" rx="2" fill="#fff" opacity=".9"/></g><circle r="6" fill="#fff"/><circle r="2.5" fill="#2b2557"/></g></svg>`,
-  compass: `<img src="assets/stickers/compass.webp" alt="" draggable="false">`,
+  compass: `<svg viewBox="0 0 120 120"><g transform="rotate(-8 60 60)"><rect x="50" y="6" width="22" height="108" rx="3" style="fill:var(--st-e)" transform="rotate(-38 60 60)"/><rect x="50" y="6" width="22" height="108" rx="3" style="fill:var(--st-e)" transform="rotate(38 60 60)"/><text x="60" y="70" text-anchor="middle" font-family="'Bowlby One', sans-serif" font-size="24" letter-spacing="-.5" stroke-width="5" paint-order="stroke" style="fill:var(--st-face);stroke:var(--st-e)">WANDER</text></g></svg>`,
+  compassRender: `<img src="assets/stickers/compass.webp" alt="" draggable="false">`,
   compassFlat: `<svg viewBox="0 0 100 100"><defs><linearGradient id="gComp" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd27a"/><stop offset="1" stop-color="#f08a24"/></linearGradient></defs><rect x="44" y="5" width="12" height="10" rx="4" fill="url(#gComp)"/><circle cx="50" cy="52" r="38" fill="url(#gComp)"/><circle cx="50" cy="52" r="29" fill="#fff8ee"/><g fill="#c9c2e8"><rect x="49" y="25" width="2" height="5"/><rect x="49" y="74" width="2" height="5"/><rect x="23" y="51" width="5" height="2"/><rect x="72" y="51" width="5" height="2"/></g><g class="needle"><path d="M50 28 57 52H43z" fill="#ff4f6d"/><path d="M50 76 57 52H43z" fill="#8b93d6"/></g><circle cx="50" cy="52" r="4.5" fill="#2b2557"/><ellipse cx="36" cy="30" rx="10" ry="3.5" fill="#fff" opacity=".45" transform="rotate(-30 36 30)"/></svg>`,
 };
 const SPARKLE = '<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4C54 34 66 46 96 50 66 54 54 66 50 96 46 66 34 54 4 50 34 46 46 34 50 4Z" fill="currentColor"/></svg>';
 
-/* Where each sticker settles, as a fraction of the playground size from its centre */
-const STICKERS = [
-  { kind: 'book',    label: 'Reading',               fx: -.37, fy: -.40, size: 1.6 },
-  { kind: 'type',    label: 'Exploring fonts',       fx: -.47, fy: -.05, size: 1.3 },
-  { kind: 'pencil',  label: 'Sketching',             fx: -.43, fy:  .30, size: 1.7 },
-  { kind: 'compass', label: 'Roaming new places',    fx:  .37, fy: -.40, size: 1.3 },
-  { kind: 'gym',     label: 'Gym',                   fx:  .47, fy: -.05, size: 1.35 },
-  { kind: 'palette', label: 'Exploring colour',      fx:  .44, fy:  .30, size: 1.35 },
+/* Where each sticker settles, as a fraction of the playground size from its centre.
+   On phones she fills the width: `phone` runs them down beside her, and on the narrowest
+   screens, where her arms reach the edges, `small` keeps them in an arc beside her head */
+const STICKER_SET = [
+  { kind: 'book',    label: 'Reading',               fx: -.37, fy: -.40, size: 1.75, phone: [-.36, -.41], small: [-.34, -.41] },
+  { kind: 'type',    label: 'Exploring fonts',       fx: -.48, fy: -.10, size: 1.8, phone: [-.46, -.13], small: [-.42, -.25] },
+  { kind: 'pencil',  label: 'Sketching',             fx: -.47, fy:  .15, size: 1.8, phone: [-.47, .15], small: [-.46, -.09] },
+  { kind: 'compass', label: 'Roaming new places',    fx:  .37, fy: -.40, size: 1.7, phone: [.36, -.41], small: [.34, -.41] },
+  { kind: 'gym',     label: 'Gym',                   fx:  .48, fy: -.10, size: 1.45, phone: [.46, -.13], small: [.42, -.25] },
+  { kind: 'palette', label: 'Exploring colour',      fx:  .47, fy:  .15, size: 1.85, phone: [.47, .15], small: [.46, -.09] },
 ];
+// The hero runs without stickers for now; set this to STICKER_SET to bring them back
+const STICKERS = [];
 
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const $ = (s) => document.querySelector(s);
@@ -783,7 +827,13 @@ const live = $('#live');
 document.querySelectorAll('[data-art]').forEach((el) => { el.innerHTML = ART[el.dataset.art]; });
 // Each letter of the big word rises on its own, a beat apart
 const bigword = $('.bigword');
-bigword.innerHTML = [...bigword.textContent].map((c, i) => `<span aria-hidden="true" style="--i:${i}">${c === ' ' ? '&nbsp;' : c}</span>`).join('');
+// Two lines (split on |); each letter rises on its own, a beat apart, carrying on across both lines.
+// The second line is a row of small tags, each "icon:text", separated by ~
+let wordIndex = 0;
+const letters = (text) => [...text].map((c) => `<span class="bw-ch" style="--i:${wordIndex++}">${c === ' ' ? '&nbsp;' : c}</span>`).join('');
+bigword.innerHTML = bigword.textContent.split('|').map((line, n) => `<span class="bw-line" aria-hidden="true">${n
+  ? line.split('~').map((tag) => { const [icon, text] = tag.split(':'); return `<span class="bw-tag"><img class="bw-ic" src="assets/${icon}.webp" alt="" width="128" height="128">${letters(text)}</span>`; }).join('')
+  : letters(line)}</span>`).join('');
 // Four copies: the track scrolls by half its width, so each half must outlast a wide screen
 $('#bandTrack').innerHTML = [...CONFIG.marquee, ...CONFIG.marquee, ...CONFIG.marquee, ...CONFIG.marquee]
   .map((w) => `<span>${w}</span>${SPARKLE}`).join('');
@@ -882,6 +932,10 @@ const stickers = STICKERS.map((cfg, i) => {
   el.style.setProperty('--bob', `${6 + (i % 3)}s`);
   el.style.setProperty('--delay', `${-i * .8}s`);
   if (cfg.size) el.style.setProperty('--size', cfg.size);
+  // Tilt toward her: the edge nearest her centre recedes (one-point perspective)
+  // Kept gentle: a strong turn squashes the side stickers into a skew
+  el.style.setProperty('--ry', `${(cfg.fx < 0 ? 1 : -1) * 12}deg`);
+  el.style.setProperty('--rx', `${cfg.fy * -24}deg`);
   el.innerHTML = `<span class="lift"><span class="art">${ART[cfg.kind]}</span></span>`;
   hero.appendChild(el);
   return { ...cfg, el, x: 0, y: 0, vx: 0, vy: 0, rot: 0, vr: 0, turns: 0, scale: 0, vs: 0,
@@ -893,15 +947,17 @@ const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 
 function homeOf(s, h = hero.getBoundingClientRect(), p = playground.getBoundingClientRect()) {
   const size = s.el.offsetWidth;
+  const w = hero.clientWidth;
+  const [fx, fy] = w < 400 && s.small ? s.small : w < 500 && s.phone ? s.phone : [s.fx, s.fy];
   // Keep the ring roughly round on wide single-column layouts
   const spread = Math.min(p.width * 1.15, p.height * 1.35);
   const left = p.left - h.left, top = p.top - h.top;
   // Stickers may hang a little past the playground's sides so they frame her instead of covering her
-  const minX = left - size * .35;
-  const maxX = Math.min(hero.clientWidth - size - 8, left + p.width - size * .65);
+  const minX = left - size * .5;
+  const maxX = Math.min(hero.clientWidth - size - 8, left + p.width - size * .5);
   return {
-    x: clamp(left + p.width / 2 + s.fx * spread - size / 2, Math.max(8, minX), maxX),
-    y: clamp(top + p.height / 2 + s.fy * p.height - size / 2, top, top + p.height - size),
+    x: clamp(left + p.width / 2 + fx * spread - size / 2, Math.max(8, minX), maxX),
+    y: clamp(top + p.height / 2 + fy * p.height - size / 2, top, top + p.height - size),
   };
 }
 function centreOfPlayground() {
@@ -986,6 +1042,49 @@ function stepStickers(now, dt) {
     s.el.style.transform = `translate3d(${s.x}px, ${s.y}px, 0) rotate(${s.rot}deg) scale(${Math.max(0, s.scale)})`;
   }
 }
+
+/* ---------- Intro letters turn into icons under the pointer ---------- */
+(() => {
+  const lede = document.querySelector('.hero .lede');
+  if (!lede || reduceMotion) return;
+  const ICONS = ['✏️', '🎨', '📚', '☕', '💡', '✨'];
+  const text = lede.textContent;
+  // Screen readers get the sentence once; the letter spans are only for show
+  lede.innerHTML = `<span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">${text}</span>`
+    + `<span aria-hidden="true">${text.split(' ').map((w) => `<span class="lw">${[...w].map((c) => `<span class="ch">${c}</span>`).join('')}</span>`).join(' ')}</span>`;
+  const chars = [...lede.querySelectorAll('.ch')];
+  // One icon under the pointer at a time; the previous one fades as the next appears, so never more than two
+  const HOLD = 500, GAP = 95;
+  const live = [];
+  let raf = 0, px = 0, py = 0, last = 0, lastCh = null, icon = 0;
+  function off(ch) { ch.classList.remove('pop'); clearTimeout(ch._t); const i = live.indexOf(ch); if (i > -1) live.splice(i, 1); }
+  function swapNear() {
+    raf = 0;
+    // Only the letter the pointer is actually on: its own width, and the inner part of its
+    // line (not the spacing above and below), so hovering between lines or words does nothing
+    let best = null;
+    for (const ch of chars) {
+      const r = ch.getBoundingClientRect(), pad = r.height * .2;
+      if (px >= r.left && px <= r.right && py >= r.top + pad && py <= r.bottom - pad) { best = ch; break; }
+    }
+    const now = performance.now();
+    if (!best || best === lastCh || now - last < GAP || !best.textContent.trim()) return;
+    // Keep a clear gap from the icon still showing, so two never touch
+    const br = best.getBoundingClientRect(), minGap = parseFloat(getComputedStyle(lede).fontSize) * 2.4;
+    if (live.some((ch) => { const r = ch.getBoundingClientRect(); return Math.hypot(r.left - br.left, r.top - br.top) < minGap; })) return;
+    while (live.length >= 2) off(live[0]);
+    best.dataset.e = ICONS[icon++ % ICONS.length];
+    best.classList.add('pop');
+    live.push(best);
+    best._t = setTimeout(() => off(best), HOLD);
+    last = now; lastCh = best;
+  }
+  lede.addEventListener('pointermove', (e) => {
+    px = e.clientX; py = e.clientY;
+    if (!raf) raf = requestAnimationFrame(swapNear);
+  });
+  lede.addEventListener('pointerdown', (e) => { px = e.clientX; py = e.clientY; swapNear(); });
+})();
 
 /* ---------- Bubble ---------- */
 let bubbleTarget = null, bubbleTimer = 0;
