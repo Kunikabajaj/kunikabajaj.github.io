@@ -94,7 +94,7 @@ a { color: inherit; }
 
 /* ---------- Opening ---------- */
 .open {
-  min-height: 62svh; display: grid; align-items: end;
+  display: grid;
   grid-template-columns: minmax(0, 1fr);
   padding: 120px var(--gutter) 24px;
 }
@@ -121,12 +121,9 @@ a { color: inherit; }
 .fly-stage {
   position: relative; height: clamp(440px, 46vw, 720px); margin: clamp(8px, 2vw, 24px) 0 clamp(24px, 4vw, 56px);
   perspective: 900px; overflow: hidden; user-select: none;
-  /* soft edges so photos melt into the dark instead of hitting a hard frame */
-  -webkit-mask-image: radial-gradient(ellipse 72% 68% at 50% 50%, #000 62%, transparent 100%);
-          mask-image: radial-gradient(ellipse 72% 68% at 50% 50%, #000 62%, transparent 100%);
 }
 .fly-stage figure {
-  --card: clamp(170px, 19vw, 320px);
+  --card: clamp(190px, 22vw, 370px);
   position: absolute; left: 50%; top: 50%; width: var(--card); aspect-ratio: 3 / 4;
   margin: calc(var(--card) * -.667) 0 0 calc(var(--card) / -2);
   border-radius: 12px; overflow: hidden; background: var(--glass);
@@ -201,7 +198,7 @@ a { color: inherit; }
 }
 @media (max-width: 560px) {
   .fly-stage { height: 440px; }
-  .fly-stage figure { --card: 140px; }
+  .fly-stage figure { --card: 160px; }
   .nav-links { display: none; }
   .fact-list li { grid-template-columns: auto minmax(0, 1fr); }
   .fact-list .note { grid-column: 2; text-align: left; }
@@ -379,7 +376,7 @@ a { color: inherit; }
 // Nav turns into a pill once you scroll, like on the home page
 const nav = document.getElementById('nav');
 addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 40), { passive: true });
-// Photo fly-through: each photo travels from far away towards you, then loops with a new direction
+// Photo fly-through: photos leave the centre one after another along fixed lanes, clockwise, and fade at the edge
 (() => {
   const stage = document.getElementById('flyStage');
   if (!stage) return;
@@ -387,25 +384,35 @@ addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 40),
   // each photo flies once per loop, evenly staggered, so the same photo never shows twice at once
   const cards = [...stage.querySelectorAll('figure')], n = cards.length;
   const FAR = -2000, NEAR = 480, LOOP = 7500; // depth in px, time per flight in ms
-  const flights = cards.map((el, i) => ({ el, lap: -1, phase: i / n, x: 0, y: 0, seed: i * 2.39996 }));
-  // a fresh direction each lap: spread out, never straight down the middle
-  const aim = (f) => {
-    const a = f.seed + f.lap * 1.3 + (Math.random() - .5) * .9;
-    const r = .62 + Math.random() * .38;
-    f.x = Math.cos(a) * r; f.y = Math.sin(a) * r;
-  };
+  const PERSPECTIVE = 900; // matches .fly-stage perspective
+  // 7 lanes like clock hands; photo i always takes lane i % 7, so every photo starts and stops in the same place each loop
+  const LANES = 7, REACH = .8;
+  const flights = cards.map((el, i) => {
+    const a = -Math.PI / 2 + ((i % LANES) / LANES) * Math.PI * 2;
+    return { el, phase: i / n, x: Math.cos(a) * REACH, y: Math.sin(a) * REACH };
+  });
   let scrollPush = 0, visible = true;
   addEventListener('scroll', () => { scrollPush = scrollY * 1.2; }, { passive: true });
   new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(stage);
+  const FADE = .7; // the last 70% of the way to the frame is a slow fade-out
   function draw(ms) {
     const w = stage.clientWidth, h = stage.clientHeight;
+    const cw = cards[0].offsetWidth, ch = cards[0].offsetHeight;
+    // space between the photo and the nearest edge of the frame at a given depth
+    const gapAt = (x, y, z) => {
+      const scale = PERSPECTIVE / (PERSPECTIVE - z);
+      return Math.min(w / 2 - (Math.abs(x) + cw / 2) * scale, h / 2 - (Math.abs(y) + ch / 2) * scale);
+    };
+    const zIn = FAR + (NEAR - FAR) * .14; // fully faded in here
     for (const f of flights) {
       const p = (ms + scrollPush) / LOOP + f.phase;
-      const lap = Math.floor(p), k = p - lap;
-      if (lap !== f.lap) { f.lap = lap; aim(f); }
+      const k = p - Math.floor(p);
       const z = FAR + (NEAR - FAR) * k;
-      const op = Math.min(1, k / .14, (1 - k) / .08);
-      f.el.style.transform = `translate3d(${(f.x * w * .66).toFixed(1)}px, ${(f.y * h * .66).toFixed(1)}px, ${z.toFixed(1)}px)`;
+      const x = f.x * w * .66, y = f.y * h * .66;
+      // how much of its room to the edge is left: it fades over the last stretch, gone before an edge can clip it
+      const left = gapAt(x, y, z) / Math.max(1, gapAt(x, y, zIn));
+      const op = Math.min(1, k / .14, left / FADE);
+      f.el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, ${z.toFixed(1)}px)`;
       f.el.style.opacity = Math.max(0, op).toFixed(3);
       f.el.style.zIndex = Math.round(z + 4000);
     }
