@@ -174,16 +174,17 @@ main { overflow-x: clip; }
   max-width: 44ch;
   margin: 0;
 }
-/* Letters near the pointer turn into little icons for a moment, then change back */
-.lede .lw { white-space: nowrap; }
-.lede .ch { display: inline-block; position: relative; }
-.lede .ch.pop { color: transparent; }
-.lede .ch.pop::after {
+/* A few phrases swap for an icon on hover (or tap): the words fade out and the icon takes their place */
+.lede .kw { position: relative; white-space: nowrap; cursor: default; transition: color .2s ease; }
+.lede .kw::before {
   content: attr(data-e); position: absolute; left: 50%; top: 50%;
-  font-size: .95em; line-height: 1; color: initial;
-  translate: -50% -50%; animation: chPop .25s cubic-bezier(.3, 1.8, .5, 1) both;
+  font-size: 1.6em; line-height: 1; pointer-events: none; color: #fff; /* own colour: the word itself goes transparent */
+  translate: -50% -50%; scale: 0; opacity: 0;
 }
-@keyframes chPop { from { scale: 0; rotate: -25deg; } }
+.lede .kw:hover, .lede .kw.on { color: transparent; }
+/* grows from a dot to full size with a little overshoot, fading in as it grows */
+.lede .kw:hover::before, .lede .kw.on::before { scale: 1; opacity: 1; animation: kwGrow .6s ease-out both; }
+@keyframes kwGrow { from { scale: 0; opacity: 0; } 25% { opacity: 1; } 55% { scale: 1.2; } to { scale: 1; opacity: 1; } }
 /* The intro is the main read in the hero, so it runs larger than other ledes, growing with the screen */
 .hero .lede { font-size: clamp(1.05rem, .9rem + .45vw, 1.3rem); line-height: 1.5; }
 /* tops line up with the headline across the hero */
@@ -197,6 +198,9 @@ main { overflow-x: clip; }
 }
 .btn:hover { transform: translateY(-2px); box-shadow: 0 12px 26px -10px rgba(0, 0, 0, .55); }
 .btn-light { background: #fff; color: var(--night); }
+/* Smoothed (squircle) corners like Figma's corner smoothing; the shape is drawn by script to fit each button */
+.btn.smooth { border-radius: 16px; }
+.btn.smooth:hover { box-shadow: none; }
 .btn-accent { background: var(--accent); color: #fff; }
 
 /* Playground: you, surrounded by stickers */
@@ -673,7 +677,7 @@ main { overflow-x: clip; }
     <div class="hero-grid">
       <div class="hero-copy">
         <h1><span class="h-a">Up late,</span> <span class="h-b"><em>designing</em> things.</span></h1>
-        <p class="lede">I’m Kunika, a hands-on product designer. A curious soul who likes to experiment with things. I find different styles to explore as well as different making them perfect overall . I love to work and get the grunty work done and concentrate more on the details and the business impact it makes.</p>
+        <p class="lede">I’m Kunika, a hands-on product designer. A <span class="kw" data-e="💡">curious soul</span> who likes to <span class="kw" data-e="🧪">experiment</span> with things. I find <span class="kw" data-e="🎨">different styles</span> to <span class="kw" data-e="🧭">explore</span> as well as different making them <span class="kw" data-e="✨">perfect</span> overall . I love to work and get the <span class="kw" data-e="💪">grunty work</span> done and concentrate more on the details and the <span class="kw" data-e="📈">business impact</span> it makes.</p>
       </div>
 
       <div class="playground" id="playground">
@@ -713,7 +717,7 @@ main { overflow-x: clip; }
         <p class="kind">App design</p>
         <h3 class="display">PeerUp onboarding</h3>
         <p class="desc">Onboarding for an English-speaking practice app, where an AI mentor greets you and gets you talking.</p>
-        <a class="btn btn-light" href="peerup.html">View case study</a>
+        <a class="btn btn-light smooth" href="peerup.html">View case study</a>
       </div>
     </article>
 
@@ -725,7 +729,7 @@ main { overflow-x: clip; }
         <p class="kind">Dashboard design</p>
         <h3 class="display">REFO</h3>
         <p class="desc">A dashboard for tracking loan cases from application to disbursal.</p>
-        <a class="btn btn-light" href="refo.html">View case study</a>
+        <a class="btn btn-light smooth" href="refo.html">View case study</a>
       </div>
     </article>
 
@@ -737,7 +741,7 @@ main { overflow-x: clip; }
         <p class="kind">App design</p>
         <h3 class="display">Homeys</h3>
         <p class="desc">A rental app that matches you to places and flatmates by vibe, not just budget.</p>
-        <a class="btn btn-light" href="homeys.html">View case study</a>
+        <a class="btn btn-light smooth" href="homeys.html">View case study</a>
       </div>
     </article>
   </section>
@@ -1043,48 +1047,34 @@ function stepStickers(now, dt) {
   }
 }
 
-/* ---------- Intro letters turn into icons under the pointer ---------- */
-(() => {
-  const lede = document.querySelector('.hero .lede');
-  if (!lede || reduceMotion) return;
-  const ICONS = ['✏️', '🎨', '📚', '☕', '💡', '✨'];
-  const text = lede.textContent;
-  // Screen readers get the sentence once; the letter spans are only for show
-  lede.innerHTML = `<span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">${text}</span>`
-    + `<span aria-hidden="true">${text.split(' ').map((w) => `<span class="lw">${[...w].map((c) => `<span class="ch">${c}</span>`).join('')}</span>`).join(' ')}</span>`;
-  const chars = [...lede.querySelectorAll('.ch')];
-  // One icon under the pointer at a time; the previous one fades as the next appears, so never more than two
-  const HOLD = 500, GAP = 95;
-  const live = [];
-  let raf = 0, px = 0, py = 0, last = 0, lastCh = null, icon = 0;
-  function off(ch) { ch.classList.remove('pop'); clearTimeout(ch._t); const i = live.indexOf(ch); if (i > -1) live.splice(i, 1); }
-  function swapNear() {
-    raf = 0;
-    // Only the letter the pointer is actually on: its own width, and the inner part of its
-    // line (not the spacing above and below), so hovering between lines or words does nothing
-    let best = null;
-    for (const ch of chars) {
-      const r = ch.getBoundingClientRect(), pad = r.height * .2;
-      if (px >= r.left && px <= r.right && py >= r.top + pad && py <= r.bottom - pad) { best = ch; break; }
-    }
-    const now = performance.now();
-    if (!best || best === lastCh || now - last < GAP || !best.textContent.trim()) return;
-    // Keep a clear gap from the icon still showing, so two never touch
-    const br = best.getBoundingClientRect(), minGap = parseFloat(getComputedStyle(lede).fontSize) * 2.4;
-    if (live.some((ch) => { const r = ch.getBoundingClientRect(); return Math.hypot(r.left - br.left, r.top - br.top) < minGap; })) return;
-    while (live.length >= 2) off(live[0]);
-    best.dataset.e = ICONS[icon++ % ICONS.length];
-    best.classList.add('pop');
-    live.push(best);
-    best._t = setTimeout(() => off(best), HOLD);
-    last = now; lastCh = best;
-  }
-  lede.addEventListener('pointermove', (e) => {
-    px = e.clientX; py = e.clientY;
-    if (!raf) raf = requestAnimationFrame(swapNear);
-  });
-  lede.addEventListener('pointerdown', (e) => { px = e.clientX; py = e.clientY; swapNear(); });
-})();
+/* ---------- Intro phrases: tap shows the icon on touch screens (hover covers mouse) ---------- */
+document.querySelectorAll('.hero .lede .kw').forEach((k) => k.addEventListener('click', () => {
+  k.classList.add('on');
+  clearTimeout(k._t);
+  k._t = setTimeout(() => k.classList.remove('on'), 1400);
+}));
+
+/* ---------- Smoothed corners (Figma-style, 60% smoothing) ---------- */
+function squircle(w, h, r = 16, s = .6) {
+  r = Math.min(r, w / 2, h / 2);
+  const p = Math.min((1 + s) * r, w / 2, h / 2);
+  const rad = (deg) => deg * Math.PI / 180;
+  const sm = Math.min(s, p / r - 1);
+  const alpha = 45 * sm, beta = 90 * (1 - sm);
+  const arc = Math.sin(rad(beta / 2)) * r * Math.SQRT2;
+  const c = r * Math.tan(rad((90 - beta) / 4)) * Math.cos(rad(alpha));
+  const d = c * Math.tan(rad(alpha));
+  const b = (p - arc - c - d) / 3, a = 2 * b;
+  const f = (n) => +n.toFixed(2);
+  return `M ${f(w - p)} 0 c ${f(a)} 0 ${f(a + b)} 0 ${f(a + b + c)} ${f(d)} a ${f(r)} ${f(r)} 0 0 1 ${f(arc)} ${f(arc)} c ${f(d)} ${f(c)} ${f(d)} ${f(b + c)} ${f(d)} ${f(a + b + c)}`
+    + ` L ${f(w)} ${f(h - p)} c 0 ${f(a)} 0 ${f(a + b)} ${f(-d)} ${f(a + b + c)} a ${f(r)} ${f(r)} 0 0 1 ${f(-arc)} ${f(arc)} c ${f(-c)} ${f(d)} ${f(-(b + c))} ${f(d)} ${f(-(a + b + c))} ${f(d)}`
+    + ` L ${f(p)} ${f(h)} c ${f(-a)} 0 ${f(-(a + b))} 0 ${f(-(a + b + c))} ${f(-d)} a ${f(r)} ${f(r)} 0 0 1 ${f(-arc)} ${f(-arc)} c ${f(-d)} ${f(-c)} ${f(-d)} ${f(-(b + c))} ${f(-d)} ${f(-(a + b + c))}`
+    + ` L 0 ${f(p)} c 0 ${f(-a)} 0 ${f(-(a + b))} ${f(d)} ${f(-(a + b + c))} a ${f(r)} ${f(r)} 0 0 1 ${f(arc)} ${f(-arc)} c ${f(c)} ${f(-d)} ${f(b + c)} ${f(-d)} ${f(a + b + c)} ${f(-d)} Z`;
+}
+const smoothRO = new ResizeObserver((entries) => entries.forEach(({ target: el }) => {
+  el.style.clipPath = `path('${squircle(el.offsetWidth, el.offsetHeight)}')`;
+}));
+document.querySelectorAll('.smooth').forEach((el) => smoothRO.observe(el));
 
 /* ---------- Bubble ---------- */
 let bubbleTarget = null, bubbleTimer = 0;
@@ -1205,8 +1195,8 @@ function runIntro() {
 
   const INTRO_MUSIC = 'assets/audio/intro-music.mp3'; // a clip cut to the intro's length
   const MUSIC_VOLUME = .55;
-  const TEMPO = .88; // lower = faster; scales how long each beat lasts
-  const CAMERA = 1.18; // lower = faster; scales every camera move (pans, whips, dives)
+  const TEMPO = .75; // lower = faster; scales how long each beat lasts
+  const CAMERA = 1; // lower = faster; scales every camera move (pans, whips, dives)
   const OPENING = .75; // extra speed-up for the opening, up to "A CONSCIOUS ADULT choice" (lower = faster)
   let pace = 1;
   const stage = $('#introStage'), grid = $('#introGrid'), ring = $('#introRing');
@@ -1377,27 +1367,28 @@ function runIntro() {
     groups.push(d);
     group = d;
     const z = Math.min(1, (innerWidth * .88) / dW);
-    const touching = qW / 2 + dW / 2;               // edge to edge with the question
+    // Thrown in like a brick from the right: the answer speeds up as it comes, slams into the
+    // question's right edge, crushes it flat against the left, squashes on impact and jolts the screen
     const offRight = innerWidth / z / 2 + dW;        // starting point, just past the right edge
-    const offLeft = innerWidth / z / 2 + qW * 1.2;   // where the question gets thrown to
-    const T = 1150, hit = 360, hold = 120;
-    // Squash each one from the side where they meet, so their edges stay touching on impact
+    const touching = qW / 2 + dW / 2;                // left edge of the answer meets the right edge of the question
+    const T = 1150, hit = 300, crush = 110;
     d.style.transformOrigin = '0 50%';
-    q.style.transformOrigin = '100% 50%';
+    q.style.transformOrigin = '0 50%';
     d.animate([
-      { translate: `${offRight + touching}px 0`, scale: '1 1', easing: 'cubic-bezier(.55, 0, 1, .55)' },
-      { translate: `${touching}px 0`, scale: '.84 1.14', offset: hit / T },
-      { translate: `${touching}px 0`, scale: '1 1', offset: (hit + hold) / T, easing: 'cubic-bezier(.2, 1.4, .4, 1)' },
+      { translate: `${offRight + touching}px 0`, scale: '1.06 .96', easing: 'cubic-bezier(.55, 0, 1, .45)' }, // gathering speed
+      { translate: `${touching}px 0`, scale: '1.06 .96', offset: hit / T, easing: 'cubic-bezier(.3, .7, .5, 1)' },
+      { translate: '0px 0', scale: '.78 1.18', offset: (hit + crush) / T, easing: 'cubic-bezier(.2, 1.7, .4, 1)' },
       { translate: '0px 0', scale: '1 1' },
     ], { duration: T, fill: 'backwards' });
     q.animate([
-      { translate: '0px 0', rotate: '0deg', scale: '1 1', opacity: 1 },
-      { translate: '-14px 0', rotate: '0deg', scale: '.8 1.08', opacity: 1, offset: .2, easing: 'cubic-bezier(.4, 0, .9, .5)' },
-      { translate: `${-offLeft}px -40px`, rotate: '-24deg', scale: '1 1', opacity: 0 },
-    ], { duration: 620, delay: hit, fill: 'forwards' });
+      { scale: '1 1', opacity: 1, easing: 'cubic-bezier(.2, 0, .4, 1)' },
+      { scale: '.1 1.25', opacity: 1, offset: .35 },
+      { scale: '.04 1.35', opacity: 0 },
+    ], { duration: 420, delay: hit, fill: 'forwards' });
     timers.push(setTimeout(() => {
       kickAt = performance.now();
-      stage.animate([{ translate: '0 0' }, { translate: '-10px 5px' }, { translate: '8px -4px' }, { translate: '-4px 2px' }, { translate: '0 0' }], { duration: 240 });
+      // a heavy sideways jolt that dies away
+      stage.animate([{ translate: '0 0' }, { translate: '-24px 6px' }, { translate: '15px -5px' }, { translate: '-9px 3px' }, { translate: '5px -2px' }, { translate: '-2px 1px' }, { translate: '0 0' }], { duration: 420 });
     }, hit));
     return camTo({ x: qc.x, y: qc.y, z, r: 0 }, 400, ease.glide);
   };
@@ -1445,21 +1436,17 @@ function runIntro() {
     { ms: 1000, run: () => look(place([word('AGAIN.', 't-huge stamp', 'stamp-in', .3)], { dx: 95, dy: -8 }), 520, ease.whip) },
     // tilt down and roll a little
     // the question lands dead centre
-    { ms: 1300, run: () => look(place([word('Is it a', 't-small up4', 'type'), word('bad thing?', 't-geo up4', 'pop', .35)], { dx: -25, dy: 72 }), 680, ease.glide, { r: 0 }) },
-    { ms: 800, run: () => stack([dots()]) },
+    // the question and the kick keep their full time (no opening speed-up) so the joke can land
+    { ms: 1300, full: true, run: () => look(place([word('Is it a', 't-small up4', 'type'), word('bad thing?', 't-geo up4', 'pop', .35)], { dx: -25, dy: 72 }), 680, ease.glide, { r: 0 }) },
+    { ms: 800, full: true, run: () => stack([dots()]) },
     // the answer slams into the question, throws it off screen, and takes its place
-    { ms: 1800, run: () => knock([word('DEBATABLE.', 't-big stamp', 'still')]) },
+    { ms: 1800, full: true, run: () => knock([word('DEBATABLE.', 't-big stamp', 'still')]) },
     // dive through a dark dot into the night
-    { ms: 1300, dive: true, run: async () => {
+    { ms: 1200, dive: true, run: async () => {
       await sleep(100); await diveInto(portal('dark'), 'dark');
-      const c = place([word('The alarm', 't-small', 'type'), word('went off.', 't-big', 'pop', .45)], { fresh: true });
-      group.classList.add('ringing');
+      const c = place([word('You made', 't-small', 'type'), word('a choice.', 't-geo', 'slide', .35, { x: '.6em' })], { fresh: true });
       arrive(c, 10);
     } },
-    // whip-pan left onto text lying back on the ring
-    { ms: 1100, run: () => look(place([word('You', 't-small'), word('HEARD', 't-huge heard', 'stamp-in', .25), word('it.', 't-script', 'write', .45, { x: '3.2em', r: '-5deg' })], { dx: -105, dy: 12, tilt: 'y' }), 540, ease.whip, { r: 0 }) },
-    // down onto the floor of the ring
-    { ms: 1200, run: () => look(place([word('You made', 't-small', 'type'), word('a choice.', 't-geo', 'slide', .35, { x: '.6em' })], { dx: 15, dy: 75, tilt: 'x' }), 650, ease.glide, { r: 0 }) },
     { ms: 800, opensUp: true, run: () => look(place([word('A', 't-mono'), word('CONSCIOUS', 't-big', 'type', .05)], { dx: 70, dy: 62 }), 600) },
     { ms: 600, run: () => stack([word('ADULT', 't-huge', 'stamp-in')]) },
     { ms: 800, run: () => stack([word('choice.', 't-script', 'write', 0, { x: '1.6em', r: '-5deg' })]) },
@@ -1471,7 +1458,7 @@ function runIntro() {
       arrive(c, -12);
     } },
     { ms: 900, run: () => look(place([word('No regrets.', 't-geo', 'slide', .2)], { dx: 100, dy: -15 }), 520, ease.whip) },
-    { ms: 1000, run: () => look(place([dots()], { dx: 45, dy: 55 }), 900, ease.glide, { z: 1.8 }) },
+    { ms: 550, run: () => look(place([dots()], { dx: 45, dy: 55 }), 500, ease.glide, { z: 1.8 }) },
     { ms: 1100, run: () => { place([word('Okay', 't-small'), word('SOME', 't-big stamp', 'stamp-in', .15), word('regrets.', 't-script', 'write', .35, { x: '1.8em', r: '-5deg' })], { replace: true }); camTo({ z: 1 }, 520, ease.land); } },
     // dive through a light dot back into the morning
     { ms: 1500, dive: true, run: async () => {
@@ -1484,10 +1471,10 @@ function runIntro() {
     } },
     { ms: 800, run: () => look(place([word('You’re staring at the', 't-small up4', 'type')], { dx: 0, dy: 70 }), 600, ease.glide, { z: 1 }) },
     // tilt the camera up to the ceiling
-    { ms: 2000, run: () => {
+    { ms: 1100, run: () => {
       const c = place([ceiling('CEILING.')], { dx: 0, dy: -150 });
-      // tilt straight up into the ceiling, then a slow push in while the letters land
-      return look(c, 1000, ease.glide, { r: 0 }).then(() => { camTo({ z: 1.06 }, 1600, ease.glide); });
+      // a quick tilt up into the ceiling, then a short push in while the letters land
+      return look(c, 650, ease.glide, { r: 0 }).then(() => { camTo({ z: 1.06 }, 800, ease.glide); });
     } },
     // whip back down to the floor
     { ms: 2400, run: async () => {
@@ -1608,7 +1595,7 @@ function runIntro() {
       const settle = SCRIPT.findIndex((b) => b.opensUp);
       for (const [i, beat] of SCRIPT.entries()) {
         if (i < from) continue;
-        pace = i < settle ? OPENING : 1;
+        pace = i < settle && !beat.full ? OPENING : 1;
         if (finished) return;
         const moving = beat.run();
         if (beat.dive) await moving;
