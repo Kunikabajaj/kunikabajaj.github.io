@@ -16,7 +16,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Unbounded:wght@600;700;800&family=Caveat+Brush&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Unbounded:wght@600;700;800&family=Caveat+Brush&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg1: #0d0e4f;
@@ -37,18 +37,19 @@
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { margin: 0; background: var(--bg1); color: var(--ink); font-family: var(--body); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+body { margin: 0; background: #05051a; color: var(--ink); font-family: var(--body); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 img { display: block; max-width: 100%; }
 a { color: inherit; }
 :focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
 
-/* Same night sky as the home page, held still */
-.sky {
-  position: fixed; inset: 0; z-index: -1;
-  background:
-    radial-gradient(55% 45% at 82% 18%, color-mix(in srgb, var(--bg3) 70%, transparent), transparent 70%),
-    radial-gradient(60% 50% at 8% 92%, color-mix(in srgb, var(--bg3) 55%, transparent), transparent 70%),
-    linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 62%, var(--bg3) 130%);
+/* Dark sky with slow ribbons of light drifting behind everything */
+.sky { position: fixed; inset: 0; z-index: -1; background: #05051a; overflow: hidden; }
+.sky canvas {
+  position: absolute; inset: -6%; width: 112%; height: 112%;
+  filter: blur(clamp(48px, 6vw, 96px)) saturate(1.3); opacity: .4;
+  /* barely any glow up top, it gathers lower down */
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, .12) 30%, #000 78%);
+          mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, .12) 30%, #000 78%);
 }
 
 /* ---------- Nav (matches home) ---------- */
@@ -93,13 +94,13 @@ a { color: inherit; }
 
 /* ---------- Opening ---------- */
 .open {
-  min-height: 92svh; display: grid; align-items: center;
-  grid-template-columns: minmax(0, 1.25fr) minmax(0, .75fr); gap: clamp(24px, 4vw, 64px);
-  padding: 120px var(--gutter) 40px;
+  min-height: 62svh; display: grid; align-items: end;
+  grid-template-columns: minmax(0, 1fr);
+  padding: 120px var(--gutter) 24px;
 }
 .eyebrow { font: 600 13px/1 var(--body); letter-spacing: .16em; text-transform: uppercase; color: var(--pink); margin: 0 0 22px; }
 .open h1 {
-  margin: 0; font: 800 clamp(2rem, 4.6vw, 4.4rem)/1.04 var(--display); letter-spacing: -.02em;
+  margin: 0; font: 700 clamp(2rem, 4.6vw, 4.4rem)/1.02 var(--body); letter-spacing: -.01em; text-transform: uppercase;
   text-wrap: balance;
 }
 .open h1 .soft { color: var(--ink-faint); }
@@ -116,6 +117,24 @@ a { color: inherit; }
 }
 .me .note svg { display: block; width: 46px; height: 40px; margin: 6px 0 0 46px; color: var(--sun); }
 
+/* ---------- Photo fly-through: photos start small in the middle, grow and drift past you ---------- */
+.fly-stage {
+  position: relative; height: clamp(440px, 46vw, 720px); margin: clamp(8px, 2vw, 24px) 0 clamp(24px, 4vw, 56px);
+  perspective: 900px; overflow: hidden; user-select: none;
+  /* soft edges so photos melt into the dark instead of hitting a hard frame */
+  -webkit-mask-image: radial-gradient(ellipse 72% 68% at 50% 50%, #000 62%, transparent 100%);
+          mask-image: radial-gradient(ellipse 72% 68% at 50% 50%, #000 62%, transparent 100%);
+}
+.fly-stage figure {
+  --card: clamp(170px, 19vw, 320px);
+  position: absolute; left: 50%; top: 50%; width: var(--card); aspect-ratio: 3 / 4;
+  margin: calc(var(--card) * -.667) 0 0 calc(var(--card) / -2);
+  border-radius: 12px; overflow: hidden; background: var(--glass);
+  box-shadow: 0 18px 40px -18px rgba(0, 0, 0, .8);
+  opacity: 0; will-change: transform, opacity;
+}
+.fly-stage img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 35%; pointer-events: none; -webkit-user-drag: none; }
+
 /* ---------- Intro ---------- */
 .intro { padding: clamp(24px, 6vw, 80px) var(--gutter); display: grid; grid-template-columns: minmax(0, .75fr) minmax(0, 1.25fr); gap: clamp(20px, 4vw, 64px); }
 .label { font: 700 clamp(1.2rem, 1.8vw, 1.5rem)/1.2 var(--display); margin: 0; }
@@ -123,48 +142,34 @@ a { color: inherit; }
 .intro p { margin: 0; font-size: clamp(1.05rem, .9rem + .45vw, 1.25rem); line-height: 1.6; color: var(--ink-soft); }
 .intro strong { color: #fff; font-weight: 600; }
 
-/* ---------- The path ---------- */
-.path { padding: clamp(40px, 7vw, 96px) var(--gutter); }
-.path-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: clamp(28px, 4vw, 48px); }
-.path-head h2 { margin: 0; font: 800 clamp(1.8rem, 3.6vw, 3rem)/1.05 var(--display); letter-spacing: -.02em; }
-.path-head p { margin: 0; color: var(--ink-faint); }
-.stops { list-style: none; margin: 0; padding: 0; position: relative; max-width: 860px; }
-/* the road: solid for the miles done, dotted and fading for the ones still ahead */
-.stops::before {
-  content: ""; position: absolute; left: 11px; top: 8px; bottom: 120px; width: 3px; border-radius: 3px;
-  background: linear-gradient(var(--glass-line), var(--pink));
+/* ---------- Fun facts ---------- */
+.facts { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 32px clamp(32px, 6vw, 96px); padding: clamp(40px, 7vw, 96px) var(--gutter); }
+.facts h2 { margin: 0; font: 700 clamp(1.8rem, 3.6vw, 3rem)/1.02 var(--body); letter-spacing: -.01em; text-transform: uppercase; }
+.fact-list { list-style: none; margin: 0; padding: 0; }
+.fact-list li {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 14px 18px;
+  padding: clamp(20px, 2.4vw, 30px) 0; border-top: 1px solid var(--glass-line);
+  font-size: clamp(1.05rem, .95rem + .4vw, 1.3rem); line-height: 1.4;
 }
-.stop { position: relative; padding: 0 0 clamp(26px, 3.4vw, 40px) 52px; }
-.stop::before {
-  content: ""; position: absolute; left: 2px; top: 4px; width: 21px; height: 21px; border-radius: 50%;
-  background: var(--bg1); border: 3px solid rgba(255, 255, 255, .7);
-}
-.stop .yr { font: 700 13px/1 var(--display); letter-spacing: .08em; color: var(--ink-faint); }
-.stop h3 { margin: 8px 0 6px; font: 700 clamp(1.15rem, 1.7vw, 1.45rem)/1.25 var(--display); }
-.stop h3 span { color: var(--ink-faint); font-weight: 600; }
-.stop p { margin: 0; max-width: 58ch; color: var(--ink-soft); line-height: 1.55; font-size: 1.02rem; }
-.stop.now::before { background: var(--pink); border-color: #fff; box-shadow: 0 0 0 7px color-mix(in srgb, var(--pink) 30%, transparent); }
-.stop.now .yr { color: var(--pink); }
-.here {
-  display: inline-block; margin-left: 10px; padding: 5px 10px; border-radius: 999px; vertical-align: middle;
-  background: var(--pink); color: var(--night); font: 700 11px/1 var(--body); letter-spacing: .08em; text-transform: uppercase;
-}
-.stop.ahead { padding-bottom: 0; }
-.stop.ahead::before { border-style: dashed; border-color: var(--ink-faint); background: transparent; }
-.stop.ahead::after {
-  content: ""; position: absolute; left: 11px; top: -110px; height: 110px; width: 3px;
-  background: repeating-linear-gradient(var(--pink) 0 6px, transparent 6px 14px);
-  -webkit-mask: linear-gradient(#000, transparent); mask: linear-gradient(#000, transparent);
-}
-.stop.ahead h3 { font: 400 clamp(1.6rem, 2.6vw, 2.2rem)/1 'Caveat Brush', cursive; color: var(--sun); }
+.fact-list li:last-child { border-bottom: 1px solid var(--glass-line); }
+.fact-list li::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--pink); }
+.fact-list .note { font: 400 12px/1.3 'Space Mono', ui-monospace, monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--pink); text-align: right; }
+.fact-list .mark { text-decoration: underline; text-decoration-color: var(--pink); text-decoration-thickness: 2px; text-underline-offset: 6px; }
+.fact-list .dots { display: inline-flex; gap: 4px; margin-left: 8px; vertical-align: middle; }
+.fact-list .dots i { width: 5px; height: 5px; border-radius: 50%; background: var(--pink); animation: blink 1.4s infinite; }
+.fact-list .dots i:nth-child(2) { animation-delay: .2s; }
+.fact-list .dots i:nth-child(3) { animation-delay: .4s; }
+@keyframes blink { 0%, 60%, 100% { opacity: .3; } 30% { opacity: 1; } }
+.fact-list .bar { display: block; position: relative; height: 2px; width: min(60%, 260px); margin-top: 14px; background: var(--pink); }
+.fact-list .bar::after { content: ""; position: absolute; right: -3px; top: -3px; width: 8px; height: 8px; border-radius: 50%; background: var(--pink); }
 
 /* ---------- Exploring now ---------- */
 .now-grid { padding: clamp(40px, 7vw, 96px) var(--gutter); }
-.now-grid h2 { margin: 0 0 clamp(24px, 3vw, 40px); font: 800 clamp(1.8rem, 3.6vw, 3rem)/1.05 var(--display); letter-spacing: -.02em; }
+.now-grid h2 { margin: 0 0 clamp(24px, 3vw, 40px); font: 700 clamp(1.8rem, 3.6vw, 3rem)/1.02 var(--body); letter-spacing: -.01em; text-transform: uppercase; }
 .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 .card { padding: 24px; border-radius: 24px; background: var(--glass); border: 1px solid var(--glass-line); }
 .card .ico { font-size: 28px; line-height: 1; }
-.card h3 { margin: 16px 0 8px; font: 700 1.15rem/1.25 var(--display); }
+.card h3 { margin: 16px 0 8px; font: 700 1.2rem/1.25 var(--body); letter-spacing: .01em; text-transform: uppercase; }
 .card p { margin: 0; color: var(--ink-soft); line-height: 1.55; }
 
 /* ---------- Off the clock ---------- */
@@ -192,18 +197,24 @@ a { color: inherit; }
   .me { width: min(78%, 320px); }
   .intro { grid-template-columns: 1fr; }
   .cards { grid-template-columns: 1fr; }
+  .facts { grid-template-columns: 1fr; }
 }
 @media (max-width: 560px) {
+  .fly-stage { height: 440px; }
+  .fly-stage figure { --card: 140px; }
   .nav-links { display: none; }
+  .fact-list li { grid-template-columns: auto minmax(0, 1fr); }
+  .fact-list .note { grid-column: 2; text-align: left; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .reveal { opacity: 1; translate: none; transition: none; }
+  .fact-list .dots i { animation: none; opacity: 1; }
 }
 </style>
 </head>
 <body>
-<div class="sky" aria-hidden="true"></div>
+<div class="sky" aria-hidden="true"><canvas id="glow"></canvas></div>
 
 <header class="nav" id="nav">
   <a class="brand" href="index.html" aria-label="Kunika Bajaj, home">
@@ -223,63 +234,37 @@ a { color: inherit; }
       <h1>It's not the start <span class="soft">or the end</span> of my journey.</h1>
       <p class="mid">I'm somewhere in the <em>middle</em>, still exploring, still learning.</p>
     </div>
-    <div class="me">
-      <p class="note" aria-hidden="true">you are here
-        <svg viewBox="0 0 46 40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4c14 2 26 10 32 26"/><path d="M27 26l8 6 4-10"/></svg>
-      </p>
-      <img src="assets/kunika-3d.webp" alt="3D illustration of Kunika in a lilac hoodie, making a peace sign" width="1000" height="1294">
-    </div>
   </section>
 
-  <section class="intro reveal">
-    <h2 class="label">Hi, I'm Kunika.</h2>
-    <div class="copy">
-      <p>I'm a hands-on product designer based in <strong>Bengaluru</strong>, with a little over three years spent at early-stage startups. That usually means being the first, or the only, designer in the room, so I've learned to do a bit of everything: talking to users, mapping flows, building design systems and sitting with engineers until the thing ships.</p>
-      <p>I'm a curious soul who likes to experiment. I try different styles, keep the ones that work and polish them until they feel right. I'd rather get the grunt work done early so I can spend my time on the details, and on the difference the work makes to the people using it and the business behind it.</p>
-    </div>
+  <!-- Photo fly-through: a few moments from life (portrait photos, 3:4) -->
+  <section class="fly-stage" id="flyStage" aria-label="A few moments from my life, drifting past">
+      <figure><img src="assets/about/photo-09.webp" alt="Me smiling in a field of yellow chrysanthemums" width="720" height="960" loading="lazy" draggable="false"></figure>
+      <figure><img src="assets/about/photo-03.webp" alt="Gurudwara Bangla Sahib in Delhi at golden hour" width="720" height="960" loading="lazy" draggable="false"></figure>
+      <figure><img src="assets/about/photo-12.webp" alt="Smiling down at a latte" width="720" height="960" loading="lazy" draggable="false"></figure>
+      <figure><img src="assets/about/photo-02.webp" alt="Cheers with filter coffee" width="720" height="960" loading="lazy" draggable="false"></figure>
+      <figure><img src="assets/about/photo-01.webp" alt="A thali lunch" width="720" height="960" loading="lazy" draggable="false"></figure>
+      <figure><img src="assets/about/photo-10.webp" alt="Laughing among the yellow flowers" width="720" height="960" loading="lazy" draggable="false"></figure>
+      <figure><img src="assets/about/photo-05.webp" alt="A shrine on the ghats of Varanasi" width="720" height="960" loading="lazy" draggable="false"></figure>
+      <figure><img src="assets/about/photo-13.webp" alt="The moon rising over a lake, through the trees" width="720" height="960" loading="lazy" draggable="false"></figure>
+      <figure><img src="assets/about/photo-06.webp" alt="A mirror selfie with friends while shopping" width="720" height="960" loading="lazy" draggable="false"></figure>
+      <figure><img src="assets/about/photo-07.webp" alt="Vaishno Devi lit up at dusk" width="720" height="960" loading="lazy" draggable="false"></figure>
+      <figure><img src="assets/about/photo-11.webp" alt="Me in a pale green saree by a gold lattice screen" width="720" height="960" loading="lazy" draggable="false"></figure>
+      <figure><img src="assets/about/photo-08.webp" alt="A mirror selfie at a red-themed party" width="720" height="960" loading="lazy" draggable="false"></figure>
+      <figure><img src="assets/about/photo-14.webp" alt="A mirror selfie in a cream and gold saree" width="720" height="960" loading="lazy" draggable="false"></figure>
+      <figure><img src="assets/about/photo-04.webp" alt="A mirror selfie in a floral kurta" width="720" height="960" loading="lazy" draggable="false"></figure>
   </section>
 
-  <section class="path reveal" aria-labelledby="path-h">
-    <div class="path-head">
-      <h2 id="path-h">The road so far</h2>
-      <p>A few stops worth mentioning.</p>
-    </div>
-    <ol class="stops">
-      <li class="stop">
-        <span class="yr">2019</span>
-        <h3>Started design school <span>· Srishti, Bengaluru</span></h3>
-        <p>Four years of a Bachelor of Design, learning to look closely, sketch badly, then sketch better.</p>
-      </li>
-      <li class="stop">
-        <span class="yr">2022</span>
-        <h3>First internship <span>· Front Row</span></h3>
-        <p>Audited the website, found the five things holding it back, and redesigned how 500+ students and their instructors talked to each other.</p>
-      </li>
-      <li class="stop">
-        <span class="yr">2023</span>
-        <h3>My first design system <span>· REFO</span></h3>
-        <p>Built components, tokens and documentation from scratch, and tested our forms with more than 50 real people. One confusing field can cost a lot.</p>
-      </li>
-      <li class="stop">
-        <span class="yr">2023</span>
-        <h3>Watching the numbers move <span>· Yearbook Canvas</span></h3>
-        <p>Redesigned the mobile and web experience; monthly visitors went from 700 to 1,600 in three months.</p>
-      </li>
-      <li class="stop">
-        <span class="yr">2024</span>
-        <h3>Founding designer <span>· PeerUp</span></h3>
-        <p>Took a speaking-practice app from zero to launch: the flows, the brand, the onboarding experiments, and an Instagram that grew to 148K followers.</p>
-      </li>
-      <li class="stop now">
-        <span class="yr">2026</span><span class="here">You are here</span>
-        <h3>Building systems, prototyping with AI</h3>
-        <p>Designing a design system from the ground up, and using AI to go from idea to clickable prototype in hours, so there's more time for the details.</p>
-      </li>
-      <li class="stop ahead">
-        <span class="yr">Next</span>
-        <h3>still exploring…</h3>
-      </li>
-    </ol>
+
+  <section class="facts reveal" aria-labelledby="facts-h">
+    <h2 id="facts-h">Fun facts</h2>
+    <ul class="fact-list">
+      <li><span>I have more fonts installed than any laptop should reasonably hold.</span><span class="note">Font nerd, self-declared</span></li>
+      <li><span>My best ideas show up after midnight. Hence the headline.</span><span></span></li>
+      <li><span>Gym rat, slowly but stubbornly.<span class="bar" aria-hidden="true"></span></span><span></span></li>
+      <li><span>Filter coffee over every other kind. No debate.</span><span class="note">Strong, with milk</span></li>
+      <li><span>I ask "why" a few times too many.<span class="dots" aria-hidden="true"><i></i><i></i><i></i></span></span><span></span></li>
+      <li><span>I will plan a trip to just roam <span class="mark">unexplored places</span>.</span><span></span></li>
+    </ul>
   </section>
 
   <section class="now-grid reveal" aria-labelledby="now-h">
@@ -327,9 +312,108 @@ a { color: inherit; }
 </main>
 
 <script>
+/* ---------- Glowing ribbons: a few blurred curves that bend, drift and shift colour ---------- */
+(() => {
+  const canvas = document.getElementById('glow');
+  const ctx = canvas.getContext('2d');
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const PALETTE = ['#ff5fcf', '#e757ed', '#7b6bff', '#505ffe', '#5a63f5', '#f2acf7'];
+  // Each ribbon is a cubic curve in 0–1 space; every point sways on its own slow sine
+  const RIBBONS = [
+    { pts: [[.02, .62], [.42, .86], [.36, .12], [.98, .22]], width: .16, phase: 0 },
+    { pts: [[.96, .2], [.66, .3], [.82, .7], [.4, .96]], width: .12, phase: 2.1 },
+    { pts: [[.28, .1], [.5, -.02], [.7, .02], [1.02, .02]], width: .07, phase: 4.2 },
+  ];
+  const mix = (a, b, k) => {
+    const pa = parseInt(a.slice(1), 16), pb = parseInt(b.slice(1), 16);
+    const ch = s => Math.round(((pa >> s) & 255) * (1 - k) + ((pb >> s) & 255) * k);
+    return `rgb(${ch(16)},${ch(8)},${ch(0)})`;
+  };
+  const colourAt = t => {
+    const n = PALETTE.length, x = ((t % n) + n) % n, i = Math.floor(x);
+    return mix(PALETTE[i], PALETTE[(i + 1) % n], x - i);
+  };
+  let w = 0, h = 0;
+  function size() {
+    // drawn small and blurred up by CSS: cheap, and the softness is the point
+    w = canvas.width = Math.max(160, Math.round(innerWidth / 5));
+    h = canvas.height = Math.max(200, Math.round(innerHeight / 5));
+  }
+  function draw(ms) {
+    const t = ms / 1000;
+    ctx.clearRect(0, 0, w, h);
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.lineCap = 'round';
+    const s = Math.min(w, h);
+    // the whole set slowly turns around the centre
+    ctx.save();
+    ctx.translate(w / 2, h / 2);
+    ctx.rotate(t * .06);
+    ctx.translate(-w / 2, -h / 2);
+    for (const r of RIBBONS) {
+      const p = r.pts.map(([x, y], i) => [
+        (x + .07 * Math.sin(t * .23 + r.phase + i * 1.7)) * w,
+        (y + .06 * Math.cos(t * .19 + r.phase + i * 2.3)) * h,
+      ]);
+      const g = ctx.createLinearGradient(p[0][0], p[0][1], p[3][0], p[3][1]);
+      const c = t * .12 + r.phase;
+      g.addColorStop(0, colourAt(c));
+      g.addColorStop(.5, colourAt(c + 1.4));
+      g.addColorStop(1, colourAt(c + 2.6));
+      ctx.strokeStyle = g;
+      const path = () => { ctx.beginPath(); ctx.moveTo(...p[0]); ctx.bezierCurveTo(...p[1], ...p[2], ...p[3]); ctx.stroke(); };
+      // a wide soft body, then a narrower brighter core
+      ctx.globalAlpha = .35; ctx.lineWidth = s * r.width * (1 + .25 * Math.sin(t * .3 + r.phase)); path();
+      ctx.globalAlpha = .45; ctx.lineWidth = s * r.width * .5; path();
+    }
+    ctx.restore();
+    ctx.globalAlpha = 1;
+    if (!still) requestAnimationFrame(draw);
+  }
+  size();
+  addEventListener('resize', () => { size(); if (still) draw(0); });
+  requestAnimationFrame(draw);
+})();
+</script>
+<script>
 // Nav turns into a pill once you scroll, like on the home page
 const nav = document.getElementById('nav');
 addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 40), { passive: true });
+// Photo fly-through: each photo travels from far away towards you, then loops with a new direction
+(() => {
+  const stage = document.getElementById('flyStage');
+  if (!stage) return;
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // each photo flies once per loop, evenly staggered, so the same photo never shows twice at once
+  const cards = [...stage.querySelectorAll('figure')], n = cards.length;
+  const FAR = -2000, NEAR = 480, LOOP = 7500; // depth in px, time per flight in ms
+  const flights = cards.map((el, i) => ({ el, lap: -1, phase: i / n, x: 0, y: 0, seed: i * 2.39996 }));
+  // a fresh direction each lap: spread out, never straight down the middle
+  const aim = (f) => {
+    const a = f.seed + f.lap * 1.3 + (Math.random() - .5) * .9;
+    const r = .62 + Math.random() * .38;
+    f.x = Math.cos(a) * r; f.y = Math.sin(a) * r;
+  };
+  let scrollPush = 0, visible = true;
+  addEventListener('scroll', () => { scrollPush = scrollY * 1.2; }, { passive: true });
+  new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(stage);
+  function draw(ms) {
+    const w = stage.clientWidth, h = stage.clientHeight;
+    for (const f of flights) {
+      const p = (ms + scrollPush) / LOOP + f.phase;
+      const lap = Math.floor(p), k = p - lap;
+      if (lap !== f.lap) { f.lap = lap; aim(f); }
+      const z = FAR + (NEAR - FAR) * k;
+      const op = Math.min(1, k / .14, (1 - k) / .08);
+      f.el.style.transform = `translate3d(${(f.x * w * .66).toFixed(1)}px, ${(f.y * h * .66).toFixed(1)}px, ${z.toFixed(1)}px)`;
+      f.el.style.opacity = Math.max(0, op).toFixed(3);
+      f.el.style.zIndex = Math.round(z + 4000);
+    }
+  }
+  if (still) { draw(4000); return; }
+  const tick = (ms) => { if (visible) draw(ms); requestAnimationFrame(tick); };
+  requestAnimationFrame(tick);
+})();
 // Sections rise in as they arrive
 const io = new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .15 });
 document.querySelectorAll('.reveal').forEach((el) => io.observe(el));

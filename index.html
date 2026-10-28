@@ -58,7 +58,7 @@
 html { scroll-behavior: smooth; }
 body {
   margin: 0;
-  background: var(--bg1);
+  background: #05051a;
   color: var(--ink);
   font-family: var(--body);
   -webkit-font-smoothing: antialiased;
@@ -69,13 +69,14 @@ a { color: inherit; }
 main { overflow-x: clip; }
 :focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
 
-/* ---------- Sky ---------- */
-.sky {
-  position: fixed; inset: 0; z-index: -3;
-  background:
-    radial-gradient(55% 45% at 82% 18%, color-mix(in srgb, var(--bg3) 70%, transparent), transparent 70%),
-    radial-gradient(60% 50% at 8% 92%, color-mix(in srgb, var(--bg3) 55%, transparent), transparent 70%),
-    linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 62%, var(--bg3) 130%);
+/* ---------- Sky: dark, with slow ribbons of light drifting behind everything (same as the About page) ---------- */
+.sky { position: fixed; inset: 0; z-index: -3; background: #05051a; overflow: hidden; }
+.sky canvas {
+  position: absolute; inset: -6%; width: 112%; height: 112%;
+  filter: blur(clamp(48px, 6vw, 96px)) saturate(1.3); opacity: .4;
+  /* barely any glow up top, it gathers lower down */
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, .12) 30%, #000 78%);
+          mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, .12) 30%, #000 78%);
 }
 #stars { position: fixed; inset: 0; z-index: -2; width: 100%; height: 100%; pointer-events: none; }
 .drift {
@@ -656,7 +657,7 @@ main { overflow-x: clip; }
   <button class="intro-skip" id="introSkip" type="button">Skip intro</button>
 </div>
 
-<div class="sky" aria-hidden="true"></div>
+<div class="sky" aria-hidden="true"><canvas id="glow"></canvas></div>
 <canvas id="stars" aria-hidden="true"></canvas>
 
 <header class="nav" id="nav">
@@ -760,6 +761,70 @@ main { overflow-x: clip; }
 </main>
 
 
+<script>
+/* ---------- Glowing ribbons: a few blurred curves that bend, drift and shift colour ---------- */
+(() => {
+  const canvas = document.getElementById('glow');
+  const ctx = canvas.getContext('2d');
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const PALETTE = ['#ff5fcf', '#e757ed', '#7b6bff', '#505ffe', '#5a63f5', '#f2acf7'];
+  // Each ribbon is a cubic curve in 0–1 space; every point sways on its own slow sine
+  const RIBBONS = [
+    { pts: [[.02, .62], [.42, .86], [.36, .12], [.98, .22]], width: .16, phase: 0 },
+    { pts: [[.96, .2], [.66, .3], [.82, .7], [.4, .96]], width: .12, phase: 2.1 },
+    { pts: [[.28, .1], [.5, -.02], [.7, .02], [1.02, .02]], width: .07, phase: 4.2 },
+  ];
+  const mix = (a, b, k) => {
+    const pa = parseInt(a.slice(1), 16), pb = parseInt(b.slice(1), 16);
+    const ch = s => Math.round(((pa >> s) & 255) * (1 - k) + ((pb >> s) & 255) * k);
+    return `rgb(${ch(16)},${ch(8)},${ch(0)})`;
+  };
+  const colourAt = t => {
+    const n = PALETTE.length, x = ((t % n) + n) % n, i = Math.floor(x);
+    return mix(PALETTE[i], PALETTE[(i + 1) % n], x - i);
+  };
+  let w = 0, h = 0;
+  function size() {
+    // drawn small and blurred up by CSS: cheap, and the softness is the point
+    w = canvas.width = Math.max(160, Math.round(innerWidth / 5));
+    h = canvas.height = Math.max(200, Math.round(innerHeight / 5));
+  }
+  function draw(ms) {
+    const t = ms / 1000;
+    ctx.clearRect(0, 0, w, h);
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.lineCap = 'round';
+    const s = Math.min(w, h);
+    // the whole set slowly turns around the centre
+    ctx.save();
+    ctx.translate(w / 2, h / 2);
+    ctx.rotate(t * .06);
+    ctx.translate(-w / 2, -h / 2);
+    for (const r of RIBBONS) {
+      const p = r.pts.map(([x, y], i) => [
+        (x + .07 * Math.sin(t * .23 + r.phase + i * 1.7)) * w,
+        (y + .06 * Math.cos(t * .19 + r.phase + i * 2.3)) * h,
+      ]);
+      const g = ctx.createLinearGradient(p[0][0], p[0][1], p[3][0], p[3][1]);
+      const c = t * .12 + r.phase;
+      g.addColorStop(0, colourAt(c));
+      g.addColorStop(.5, colourAt(c + 1.4));
+      g.addColorStop(1, colourAt(c + 2.6));
+      ctx.strokeStyle = g;
+      const path = () => { ctx.beginPath(); ctx.moveTo(...p[0]); ctx.bezierCurveTo(...p[1], ...p[2], ...p[3]); ctx.stroke(); };
+      // a wide soft body, then a narrower brighter core
+      ctx.globalAlpha = .35; ctx.lineWidth = s * r.width * (1 + .25 * Math.sin(t * .3 + r.phase)); path();
+      ctx.globalAlpha = .45; ctx.lineWidth = s * r.width * .5; path();
+    }
+    ctx.restore();
+    ctx.globalAlpha = 1;
+    if (!still) requestAnimationFrame(draw);
+  }
+  size();
+  addEventListener('resize', () => { size(); if (still) draw(0); });
+  requestAnimationFrame(draw);
+})();
+</script>
 <script>
 /* ============================================================
    Edit these to make the page yours
@@ -1181,7 +1246,7 @@ function cycleThemes() {
   clearInterval(themeTimer);
   if (!reduceMotion) themeTimer = setInterval(() => applyTheme(themeIndex + 1, 4), 9000);
 }
-cycleThemes();
+// the dark sky stays put, so the palettes no longer cycle on their own
 
 /* ---------- Kinetic intro: plays once per visit. ?intro replays it; ?intro=17 starts at beat 17 ---------- */
 function runIntro() {
