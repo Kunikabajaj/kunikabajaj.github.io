@@ -236,12 +236,16 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
   .stage.fit { overflow: visible; margin: 24px 0 0; }
   .stage.fit > .inner { margin: 0; }
 
-  .stats { display: grid; gap: 18px; margin-top: 24px; }
-  .stat { display: flex !important; align-items: center; gap: 14px; }
-  .stat .arrow { position: static; width: 30px !important; height: 52px; }
-  .stat .stat-n { font-size: 64px; line-height: 1; }
-  .stat .stat-n small { font-size: 34px; }
-  .stat .t { flex: 1; }
+  /* key insights: like desktop, the laptop sits small on the left and the rates take the room on the right */
+  .ki { display: grid; grid-template-columns: minmax(0, 46fr) minmax(0, 54fr); column-gap: 14px; align-items: center; }
+  .ki > h2 { grid-column: 1 / -1; margin-bottom: 20px; }
+  .ki > img.a { grid-column: 1; }
+  .stats { display: grid; gap: 16px; grid-column: 2; }
+  .stat { display: grid !important; grid-template-columns: 13px 4.2em 1fr; align-items: center; column-gap: 6px; font-size: 16px; }
+  .stat .arrow { position: static; width: 13px !important; height: 24px; }
+  .stat .stat-n { font-size: 34px; line-height: 1; letter-spacing: -.03em; }
+  .stat .stat-n small { font-size: 18px; margin-left: 1px !important; }
+  .stat .t { min-width: 0; font-size: 11.5px; line-height: 1.3; }
 
   .list li { padding-left: 22px; margin-bottom: 14px; }
   .list li::before { left: 4px; }
@@ -258,6 +262,15 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
   .sec > h2.a + h3.a { margin-top: 20px; }
   .sec > h3.a + p.a { margin-top: 6px; }
   .sec > .row + p.a, .sec > p.a + p.a { margin-top: 18px; }
+}
+/* narrow phones: slimmer numbers so each label fits on two lines next to the bigger laptop */
+@media (max-width: 420px) {
+  .ki { column-gap: 10px; }
+  .stat { grid-template-columns: 11px 3.5em 1fr; column-gap: 5px; }
+  .stat .arrow { width: 11px !important; height: 20px; }
+  .stat .stat-n { font-size: 28px; }
+  .stat .stat-n small { font-size: 15px; }
+  .stat .t { font-size: 11px; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .back { transition: none; } .kicker, .title, .hero-hand, .chip { animation: none; } }
 </style>
@@ -338,7 +351,7 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
   </section>
 
   <!-- ===== Key insights ===== -->
-  <section class="sec" aria-labelledby="ki-h">
+  <section class="sec ki" aria-labelledby="ki-h">
     <h2 id="ki-h" class="a t b h-big" style="--x:147;--y:3450;--w:700;--fs:130;--lh:163;--ls:-.02em">Key Insights</h2>
     <img class="a" style="--x:108;--y:3718;--w:977" src="assets/work/peerup/macbook.webp" width="1954" height="1484" alt="Laptop showing PeerUp's 'Different ways to practice' screen" loading="lazy">
     <div class="stats">
