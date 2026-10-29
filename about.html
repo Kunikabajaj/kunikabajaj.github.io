@@ -88,6 +88,14 @@ a { color: inherit; }
 /* Right side of the nav: plain white text links, no pill */
 .nav-right { display: flex; align-items: center; gap: clamp(18px, 2.4vw, 32px); }
 .nav-text { color: #fff; font-weight: 600; font-size: 15px; text-decoration: none; text-shadow: 0 1px 10px rgba(4, 4, 40, .45); }
+/* the smallest phones: keep the name and both links on one line */
+.brand, .nav-text { white-space: nowrap; }
+@media (max-width: 360px) {
+  .nav { gap: 10px; }
+  .brand { font-size: 13px; padding: 8px 12px; gap: 6px; }
+  .nav-right { gap: 12px; }
+  .nav-text { font-size: 13px; }
+}
 .nav-text:hover, .nav-text[aria-current] { text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 2px; }
 .nav.scrolled .brand { background: #fff; color: var(--night); box-shadow: 0 8px 24px -10px rgba(0, 0, 0, .5); }
 .nav.scrolled .nav-links { opacity: 0; transform: translate(-50%, -10px); pointer-events: none; }

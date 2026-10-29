@@ -131,6 +131,14 @@ main { overflow-x: clip; }
 /* Right side of the nav: plain white text links, no pill */
 .nav-right { display: flex; align-items: center; gap: clamp(18px, 2.4vw, 32px); }
 .nav-text { color: #fff; font-weight: 600; font-size: 15px; text-decoration: none; text-shadow: 0 1px 10px rgba(4, 4, 40, .45); }
+/* the smallest phones: keep the name and both links on one line */
+.brand, .nav-text { white-space: nowrap; }
+@media (max-width: 360px) {
+  .nav { gap: 10px; }
+  .brand { font-size: 13px; padding: 8px 12px; gap: 6px; }
+  .nav-right { gap: 12px; }
+  .nav-text { font-size: 13px; }
+}
 .nav-text:hover, .nav-text[aria-current] { text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 2px; }
 .nav.scrolled .brand { background: #fff; color: var(--night); box-shadow: 0 8px 24px -10px rgba(0, 0, 0, .5); }
 .nav.scrolled .nav-links { opacity: 0; transform: translate(-50%, -10px); pointer-events: none; }
@@ -206,7 +214,8 @@ main { overflow-x: clip; }
 
 /* Playground: you, surrounded by stickers */
 .playground {
-  position: relative; height: clamp(460px, 68vh, 660px); --px: 0; --py: 0;
+  --ph: clamp(460px, 68vh, 660px);
+  position: relative; height: var(--ph); --px: 0; --py: 0;
   --word: min(8.6vw, 128px);
   /* room for the two lines of big words, which hang below her */
   margin-bottom: calc(var(--word) * .7);
@@ -232,7 +241,8 @@ main { overflow-x: clip; }
 
 .me {
   position: absolute; left: 50%; bottom: 9%; z-index: 10;
-  height: 90%; aspect-ratio: 1000 / 1294;
+  /* 90% of the stage's height, but never wider than the column, so narrow phones shrink her instead of cutting her off */
+  width: min(100%, calc(var(--ph) * .9 * 1200 / 1494)); aspect-ratio: 1200 / 1494;
   translate: -50% 0;
   padding: 0; border: 0; background: none; cursor: pointer;
 }
@@ -627,7 +637,7 @@ main { overflow-x: clip; }
   .hero h1 .h-a, .hero h1 .h-b { display: block; white-space: nowrap; }
   .hero .lede { margin-top: 16px; font-size: clamp(1.08rem, .85rem + 1.3vw, 1.3rem); }
 
-  .playground { height: 480px; }
+  .playground { --ph: 480px; }
   .card, .card.flip { grid-template-columns: 1fr; padding: 14px 14px 28px; border-radius: 36px; }
   .card.flip .panel { order: 0; }
   .card-copy { padding: 0 10px; }
@@ -692,7 +702,7 @@ main { overflow-x: clip; }
                 <text><textPath href="#ringPath" textLength="560">KUNIKA ✦ NOSY HUMAN ✦ KUNIKA ✦ NOSY HUMAN ✦ KUNIKA ✦ NOSY HUMAN ✦</textPath></text>
               </svg>
             </span>
-            <img src="assets/kunika-3d.webp" alt="3D illustration of Kunika in a lilac hoodie, making a peace sign" width="1000" height="1294">
+            <img src="assets/kunika-3d.webp?v=3" alt="3D illustration of Kunika in a lilac hoodie, making a peace sign" width="1200" height="1494">
           </span>
         </button>
         <p class="bigword" aria-label="Product designer. B2B and B2C industries. 3+ years of experience.">PRODUCT DESIGNER|briefcase:B2B &amp; B2C INDUSTRIES~laptop:3+ YEARS OF EXPERIENCE</p>
