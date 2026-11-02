@@ -153,8 +153,8 @@ a { color: inherit; }
 .fact-list { list-style: none; margin: 0; padding: 0; }
 .fact-list li {
   display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 14px 18px;
-  padding: clamp(20px, 2.4vw, 30px) 0; border-top: 1px solid var(--glass-line);
-  font-size: clamp(1.05rem, .95rem + .4vw, 1.3rem); line-height: 1.4;
+  padding: clamp(14px, 1.6vw, 20px) 0; border-top: 1px solid var(--glass-line);
+  font-size: clamp(.9rem, .8rem + .25vw, 1.05rem); line-height: 1.4;
 }
 .fact-list li:last-child { border-bottom: 1px solid var(--glass-line); }
 .fact-list li::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--pink); }
@@ -167,6 +167,9 @@ a { color: inherit; }
 @keyframes blink { 0%, 60%, 100% { opacity: .3; } 30% { opacity: 1; } }
 .fact-list .bar { display: block; position: relative; height: 2px; width: min(60%, 260px); margin-top: 14px; background: var(--pink); }
 .fact-list .bar::after { content: ""; position: absolute; right: -3px; top: -3px; width: 8px; height: 8px; border-radius: 50%; background: var(--pink); }
+
+/* Date notes stay a quieter tone */
+.fact-list .note { font-size: 11px; }
 
 /* ---------- Exploring now ---------- */
 .now-grid { padding: clamp(40px, 7vw, 96px) var(--gutter); }
@@ -259,6 +262,18 @@ a { color: inherit; }
       <figure><img src="assets/about/photo-04.webp" alt="A mirror selfie in a floral kurta" width="720" height="960" loading="lazy" draggable="false"></figure>
   </section>
 
+
+  <section class="facts facts--xp reveal" aria-labelledby="xp-h">
+    <h2 id="xp-h">Experience</h2>
+    <ul class="fact-list">
+      <li><span><span class="mark">AndPayments</span> — Product Designer. Wallet KYC &amp; a cross-product design system.</span><span class="note">May 2026 — Now</span></li>
+      <li><span><span class="mark">PeerUp</span> — Founding Designer. Zero to launch, full brand, 148K Instagram.</span><span class="note">May 2024 — May 2026</span></li>
+      <li><span><span class="mark">Yearbook Canvas</span> — UI/UX Designer. Site redesign; monthly visitors +128%.</span><span class="note">Jul 2023 — Mar 2024</span></li>
+      <li><span><span class="mark">Refo</span> — UI/UX, part-time. Design system &amp; dashboard redesign.</span><span class="note">Feb 2023 — Jul 2023</span></li>
+      <li><span><span class="mark">Front Row</span> — UI/UX Intern. Site audit &amp; flows for 500+ students.</span><span class="note">Jun 2022 — Aug 2022</span></li>
+      <li><span>College — <span class="mark">Srishti Institute of Art, Design and Technology</span> (B.Des).</span><span class="note">Jul 2019 — May 2023</span></li>
+    </ul>
+  </section>
 
   <section class="facts reveal" aria-labelledby="facts-h">
     <h2 id="facts-h">Fun facts</h2>
