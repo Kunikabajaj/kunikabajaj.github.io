@@ -17,14 +17,16 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 rx=%2724%27 fill=%27%230d0e4f%27/%3E%3Cpath d=%27M50 14C53 38 62 47 86 50 62 53 53 62 50 86 47 62 38 53 14 50 38 47 47 38 50 14Z%27 fill=%27%23ff5fcf%27/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anybody:wght@600&family=Plus+Jakarta+Sans:wght@400;500;600&family=Figtree:wght@600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anybody:wght@600&family=Figtree:wght@600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600&display=swap" rel="stylesheet">
 <style>
 /*
   Built from the Figma frame "portfolio-finals > REFO" (1920 wide), the same way as peerup.html:
   desktop places every piece at its Figma coordinates (--u = one Figma pixel);
   phones (< 900px) fall back to a reading flow.
 */
-:root { --ink: #000; --note-ink: #05144d; --sans: 'Plus Jakarta Sans', system-ui, sans-serif; }
+:root { --ink: #000; --note-ink: #05144d; --sans: 'General Sans', system-ui, sans-serif; }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body { margin: 0; background: #fff; color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
@@ -40,6 +42,7 @@ img { display: block; max-width: none; }
 img.a { height: auto; }
 .t { font-size: calc(var(--fs) * var(--u)); line-height: calc(var(--lh) * var(--u)); letter-spacing: var(--ls, 0); }
 .sb { font-weight: 600; }
+.md { font-weight: 500; }
 .rg { font-weight: 400; }
 h1.a, h2.a, h3.a { white-space: nowrap; }
 
@@ -54,20 +57,20 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
   background:
     linear-gradient(100deg, rgba(183, 255, 160, .89), rgba(227, 240, 255, .89)) padding-box,
     linear-gradient(90deg, #8ef283, #72bceb) border-box;
-  font-size: calc(32 * var(--u)); white-space: nowrap;
+  font-size: calc(32 * var(--u)); line-height: calc(43 * var(--u)); letter-spacing: .02em; white-space: nowrap;
 }
 .sw { height: calc(294 * var(--u)); border-radius: calc(32 * var(--u)); }
 .dot { aspect-ratio: 1; border-radius: 50%; background: #2f86ff; z-index: 4; }
 .note {
   z-index: 4; color: var(--note-ink); font-weight: 500;
-  font-size: calc(16 * var(--u)); line-height: 1.25;
+  font-size: calc(16 * var(--u)); line-height: calc(22 * var(--u));
   border: 1px solid #62abff; border-radius: calc(6 * var(--u));
   background: linear-gradient(120deg, rgba(123, 255, 152, .5), rgba(110, 185, 255, .5));
   backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
 }
 .note-big {
   z-index: 4; color: var(--note-ink); font-weight: 500;
-  font-size: calc(27 * var(--u)); line-height: calc(34 * var(--u));
+  font-size: calc(27 * var(--u)); line-height: calc(36 * var(--u));
   background: linear-gradient(92deg, #baffa4, #89a2ff);
 }
 
@@ -136,7 +139,7 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
       <h1 class="a t brand" style="--x:88;--y:302;--w:250;--fs:96;--lh:40;--ls:.02em">REFO</h1>
       <span class="a t brand" style="--x:350;--y:302;--w:21;--fs:96;--lh:40" aria-hidden="true">.</span>
     </div>
-    <p class="a t sb intro" style="--x:392;--y:267;--w:1415;--fs:77;--lh:97;--ls:.02em">Refo is a lending-automation platform that helps banks/fintechs run the whole loan journey with ease</p>
+    <p class="a t md intro" style="--x:392;--y:267;--w:1415;--fs:77;--lh:104;--ls:.02em">Refo is a lending-automation platform that helps banks/fintechs run the whole loan journey with ease</p>
     <img class="a line" style="--x:391;--y:675;--w:1172" src="assets/work/refo/line.webp" alt="">
     <div class="chips" style="display:contents">
       <span class="a chip" style="--x:437;--y:646;--w:224">Onboarding</span>
@@ -149,8 +152,8 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
 
   <!-- ===== Task ===== -->
   <section class="sec" aria-labelledby="task-h">
-    <h2 id="task-h" class="a t sb h-big" style="--x:418;--y:1991;--w:1310;--fs:77;--lh:97;--ls:.02em">Task</h2>
-    <p class="a t rg" style="--x:418;--y:2143;--w:1356;--fs:42;--lh:53;--ls:.02em">Build a clean, guided dashboard for Refo that turns complex loan approvals into a simple digital journey, reduces errors, and delivers accurate decisions.</p>
+    <h2 id="task-h" class="a t sb h-big" style="--x:418;--y:1991;--w:1310;--fs:77;--lh:104;--ls:.02em">Task</h2>
+    <p class="a t rg" style="--x:418;--y:2150;--w:1356;--fs:42;--lh:57;--ls:.02em">Build a clean, guided dashboard for Refo that turns complex loan approvals into a simple digital journey, reduces errors, and delivers accurate decisions.</p>
     <div class="row two">
       <img class="a" style="--x:151;--y:2374;--w:791" src="assets/work/refo/sq1.webp" width="1582" height="1582" alt="REFO logo mark on a green-to-blue gradient" loading="lazy">
       <img class="a" style="--x:1001;--y:2374;--w:791" src="assets/work/refo/sq2.webp" width="1582" height="1582" alt="REFO app icon on a phone" loading="lazy">
@@ -159,13 +162,13 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
 
   <!-- ===== Data ===== -->
   <section class="sec" aria-label="Integrations">
-    <p class="a t rg" style="--x:427;--y:3336;--w:1360;--fs:42;--lh:53;--ls:.02em">Refo can fetch data seamlessly from places like Databases &amp; Warehouses, Cloud storage &amp; files, analyse it and help in&nbsp; building&nbsp; Robust integrations &amp; data infrastructure</p>
+    <p class="a t rg" style="--x:427;--y:3336;--w:1360;--fs:42;--lh:57;--ls:.02em">Refo can fetch data seamlessly from places like Databases &amp; Warehouses, Cloud storage &amp; files, analyse it and help in&nbsp; building&nbsp; Robust integrations &amp; data infrastructure</p>
     <img class="a" style="--x:215;--y:3632;--w:1490" src="assets/work/refo/dash.webp" width="2400" height="1472" alt="Company credit overview for a borrower: score, CMR, balances and facilities" loading="lazy">
   </section>
 
   <!-- ===== Style guide ===== -->
   <section class="sec" aria-labelledby="sg-h">
-    <h2 id="sg-h" class="a t sb h-mid" style="--x:86;--y:4717;--w:400;--fs:60;--lh:76">Style Guide</h2>
+    <h2 id="sg-h" class="a t sb h-mid" style="--x:86;--y:4717;--w:400;--fs:60;--lh:81;--ls:.02em">Style Guide</h2>
     <div class="row">
       <img class="a" style="--x:88;--y:4878;--w:801" src="assets/work/refo/sg1.webp" width="1602" height="2062" alt="3D illustration of growth charts in REFO blue" loading="lazy">
     </div>
@@ -174,7 +177,7 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
       <img class="a" style="--x:1521;--y:4878;--w:275" src="assets/work/refo/sg-icon.webp" width="550" height="604" alt="REFO icon" loading="lazy">
     </div>
     <div class="row">
-      <img class="a" style="--x:921;--y:5204;--w:871" src="assets/work/refo/sg-type.webp" width="1742" height="744" alt="Typeface: Plus Jakarta Sans in Regular, Medium and Semi Bold" loading="lazy">
+      <img class="a" style="--x:921;--y:5204;--w:871" src="assets/work/refo/sg-type.webp" width="1742" height="744" alt="Typeface: General Sans in Regular, Medium and Semi Bold" loading="lazy">
     </div>
     <div class="swatches" style="display:contents" role="list" aria-label="Colour palette">
       <div class="a sw" role="listitem" aria-label="Blue #006DFF" style="--x:921;--y:5608;--w:162;background:#006dff"></div>
@@ -187,7 +190,7 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
 
   <!-- ===== Impact ===== -->
   <section class="sec" aria-label="Impact">
-    <p class="a t rg" style="--x:89;--y:6053;--w:1300;--fs:40;--lh:50">The Faster,&nbsp; Cheaper, Smoother lending automation&nbsp; platform</p>
+    <p class="a t rg" style="--x:89;--y:6053;--w:1300;--fs:40;--lh:54">The Faster,&nbsp; Cheaper, Smoother lending automation&nbsp; platform</p>
     <img class="a" style="--x:84;--y:6132;--w:1710" src="assets/work/refo/stats.webp" width="2400" height="644" alt="3x faster customer onboarding, 30% increase in customer conversions, 60% reduction in tech costs, 50% reduction in backend process TAT" loading="lazy">
     <div class="row bars">
       <img class="a" style="--x:88;--y:6612;--w:488" src="assets/work/refo/g1.webp" width="976" height="324" alt="" loading="lazy">
@@ -202,7 +205,7 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
 
   <!-- ===== Designs ===== -->
   <section class="sec" aria-labelledby="rd-h">
-    <h2 id="rd-h" class="a t sb h-mid" style="--x:85;--y:7268;--w:420;--fs:61;--lh:77">Refo Designs</h2>
+    <h2 id="rd-h" class="a t sb h-mid" style="--x:85;--y:7268;--w:420;--fs:61;--lh:82">Refo Designs</h2>
     <img class="a" style="--x:424;--y:7438;--w:1366" src="assets/work/refo/d1.webp" width="2400" height="1370" alt="Borrower details form with a stepped side navigation" loading="lazy">
     <img class="a connector" style="--x:255;--y:7916;--w:170" src="assets/work/refo/v1.webp" alt="" loading="lazy">
     <span class="a dot" style="--x:235;--y:8287;--w:54" aria-hidden="true"></span>
