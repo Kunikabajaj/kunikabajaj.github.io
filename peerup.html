@@ -212,7 +212,13 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
 
   /* about */
   .card { display: none; }
-  .tile-logo { display: none; }
+  /* the logo rides on the first tile as the row scrolls: same share of the tile as in Figma (x 194/600, y 241/764, w 237/600) */
+  .row { position: relative; }
+  /* the first tile carries Figma's 40px white page border on its left (80px of 1200 in the file): trim it on phones and round all four corners like the other tiles */
+  .row > img.a.tile1 { clip-path: inset(0 0 0 6.67% round calc(var(--rh, 380px) * .0327)); margin-left: calc(var(--rh, 380px) * 1200 / 1528 * -.0667); }
+  /* the last tile has the same border baked into its right side (80px of 1192) */
+  .row > img.a.tile3 { clip-path: inset(0 6.71% 0 0 round calc(var(--rh, 380px) * .0327)); margin-right: calc(var(--rh, 380px) * 1192 / 1528 * -.0671); }
+  .row > img.a.tile-logo { position: absolute; z-index: 3; --tw: calc(var(--rh, 380px) * 1200 / 1528); left: calc(24px + var(--tw) * (.323 - .0667)); top: calc(4px + var(--rh, 380px) * .315); width: calc(var(--tw) * .395); height: auto; }
   .what { display: grid; gap: 14px; }
   .about-cards { display: grid; gap: 16px; margin-top: 20px; }
   .about-card { display: block !important; position: relative; padding: 22px; border-radius: 22px; background: rgba(255, 255, 255, .57); box-shadow: 0 4px 20px rgba(214, 218, 236, .69); }
@@ -344,11 +350,11 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
   <!-- ===== Brand tiles ===== -->
   <section class="sec" aria-label="PeerUp brand and app">
     <div class="row">
-      <img class="a" style="--x:0;--y:2526;--w:600" src="assets/work/peerup/tile1.webp" width="1200" height="1528" alt="PeerUp logo over a desk of notes and pens" loading="lazy">
+      <img class="a tile1" style="--x:0;--y:2526;--w:600" src="assets/work/peerup/tile1.webp" width="1200" height="1528" alt="PeerUp logo over a desk of notes and pens" loading="lazy">
+      <img class="a tile-logo" style="--x:194;--y:2767;--w:237" src="assets/work/peerup/tile1-logo.webp" width="474" height="581" alt="" loading="lazy">
       <img class="a" style="--x:649;--y:2526;--w:626" src="assets/work/peerup/tile2.webp" width="1252" height="1528" alt="PeerUp home screen: practice with peers and with AI characters" loading="lazy">
-      <img class="a" style="--x:1324;--y:2526;--w:596" src="assets/work/peerup/tile3.webp" width="1192" height="1528" alt="The PeerUp app icon on a phone home screen" loading="lazy">
+      <img class="a tile3" style="--x:1324;--y:2526;--w:596" src="assets/work/peerup/tile3.webp?v=7" width="1192" height="1528" alt="The PeerUp app icon on a phone home screen" loading="lazy">
     </div>
-    <img class="a tile-logo" style="--x:194;--y:2767;--w:237" src="assets/work/peerup/tile1-logo.webp" width="474" height="581" alt="" loading="lazy">
   </section>
 
   <!-- ===== Key insights ===== -->
