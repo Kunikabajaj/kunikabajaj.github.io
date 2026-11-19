@@ -202,6 +202,8 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
 /* problems use the same columns as the goals, without icons */
 .prob-cols .gcol { padding-top: calc(64 * var(--u)); }
 .prob-cols .gcol + .gcol::before { top: calc(48 * var(--u)); }
+/* the headline problem reads a step larger */
+.prob-cols .gcol p.hl { font-size: calc(40 * var(--u)); font-weight: 600; }
 
 /* ---------- Experiments: taped cards in the case study's violet, pink, blue and deep purple ---------- */
 .xcards { z-index: 3; list-style: none; padding: 0; display: flex; justify-content: space-between; align-items: flex-start; }
@@ -340,6 +342,7 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
   .gcol:nth-child(n+3) { border-top: 1px solid rgba(63, 59, 59, .25); }
   .gicon { width: 44px; height: 44px; margin-bottom: 12px; }
   .gcol p { font-size: 15px; }
+  .prob-cols .gcol p.hl { font-size: 17px; }
   .num-grid { display: grid !important; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
   .num-grid > .a { width: 100%; }
   .flow-grid { display: grid !important; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 20px; }
