@@ -120,6 +120,9 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
 @keyframes heroRise { from { opacity: 0; translate: 0 calc(260 * var(--u)); scale: .92; } }
 @keyframes chipIn { from { opacity: 0; translate: var(--fx) calc(40 * var(--u)); rotate: var(--fr); scale: .6; } }
 
+/* every heading on the page in Clash Display, like the title */
+.canvas h2, .canvas h3, .thanks { font-family: 'Clash Display', 'Unbounded', sans-serif; font-weight: 600; }
+
 /* ---------- About ---------- */
 .sep { color: rgba(0, 0, 0, .3); font-weight: 400; padding: 0 .6em; }
 .card {
@@ -261,8 +264,8 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
   .a { position: relative; left: auto; top: auto; width: auto; }
   .t { font-size: var(--m, 17px); line-height: 1.4; }
   h1.t, h2.t { line-height: 1.1; }
-  .h-big { --m: 44px; }
-  .h-mid { --m: 32px; }
+  /* section headings share one size, small enough that the longest ("Experiment screens", about 10.1em wide) stays on one line on any phone */
+  .h-big, .h-mid { --m: min(44px, calc((100vw - 48px) / 10.5)); }
   .h-sm { --m: 22px; }
   img.a { width: 100%; }
 
@@ -395,7 +398,7 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
     </div>
     <div>
       <p class="a t sb" style="--x:774;--y:1417;--w:1030;--fs:30;--lh:42;--ls:-.02em">Learning App<span class="sep">I</span>2025</p>
-      <p class="a t rg soft" style="--x:774;--y:1509;--w:1030;--fs:30;--lh:42;--ls:-.02em">PeerUp helps working professionals communicate more effectively at the workplace. The platform uses AI to create personalised practice plans, enabling learners to practise spoken English and workplace scenarios with both AI and real peers. With instant feedback and targeted exercises from an AI coach, learners build confidence and improve their communication skills faster.</p>
+      <p class="a t rg soft" style="--x:774;--y:1509;--w:1030;--fs:30;--lh:42;--ls:-.02em">PeerUp helps working professionals communicate more effectively at the workplace. The platform uses AI to create personalised practice plans, enabling learners to practise spoken English &amp; workplace scenarios with both AI &amp; real peers. With instant feedback &amp; targeted exercises from an AI coach, learners build confidence &amp; improve their communication skills faster.</p>
     </div>
   </section>
 
@@ -408,7 +411,7 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
     <div class="about-cards">
       <div class="about-card" style="display:contents">
         <span class="a ic" style="--x:127;--y:1925;--w:88"><img src="assets/work/peerup/ic2-problem.webp" style="--iw:51" width="204" height="192" alt=""></span>
-        <div class="a card-t" style="--x:127;--y:2103;--w:470"><h3>Problem Overview</h3><p>Many users finished onboarding and left before making their first call.</p></div>
+        <div class="a card-t" style="--x:127;--y:2103;--w:470"><h3>Problem Overview</h3><p>Many users finished onboarding &amp; left before making their first call.</p></div>
       </div>
       <div class="about-card" style="display:contents">
         <span class="a ic" style="--x:751;--y:1925;--w:88"><img src="assets/work/peerup/ic2-goal.webp" style="--iw:48" width="192" height="188" alt=""></span>
@@ -416,7 +419,7 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
       </div>
       <div class="about-card" style="display:contents">
         <span class="a ic" style="--x:1365;--y:1925;--w:88"><img src="assets/work/peerup/ic2-role.webp" style="--iw:45" width="180" height="260" alt=""></span>
-        <div class="a card-t" style="--x:1365;--y:2103;--w:422"><h3>My Role in Solving</h3><p>Sole designer, working with 2 PMs over 5 weeks. I ran the experiments and designed the final flow.</p></div>
+        <div class="a card-t" style="--x:1365;--y:2103;--w:422"><h3>My Role in Solving</h3><p>Sole designer, working with 2 PMs over 5 weeks. I ran the experiments &amp; designed the final flow.</p></div>
       </div>
     </div>
   </section>
@@ -458,7 +461,7 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
         <p class="a note" style="--x:315;--y:4878;--w:200">Back icon looks very outdated</p>
         <p class="a note" style="--x:536;--y:4861;--w:172">Not even 5% of people are giving the profile picture</p>
         <p class="a note" style="--x:982;--y:4858;--w:142">The icons are a darker color of purple ,why ?</p>
-        <p class="a note flat" style="--x:1202;--y:4854;--w:173">The icon colors look really off and readability is zero</p>
+        <p class="a note flat" style="--x:1202;--y:4854;--w:173">The icon colors look really off &amp; readability is zero</p>
         <p class="a note" style="--x:1565;--y:4859;--w:142">once user is told all is setup ,then there is no nudge to start a call</p>
         <img class="a dd" style="--x:336;--y:4929;--w:22.66" src="assets/work/peerup/dd-1.svg" alt="">
         <img class="a dd" style="--x:1003;--y:4920;--w:15.71;rotate:93.5deg" src="assets/work/peerup/dd-2.svg" alt="">
@@ -499,8 +502,8 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
   <section class="sec" aria-labelledby="go-h">
     <h2 id="go-h" class="a t b h-big" style="--x:116;--y:6234;--w:900;--fs:100;--lh:40">Goals to work on</h2>
     <ul class="a goal-grid" style="--x:116;--y:6400;--w:1690">
-      <li class="gcol"><span class="gicon"><img src="assets/work/peerup/g2-eyes.webp" style="--ih:84" width="292" height="240" alt=""></span><p>Introduce the apps features and values</p></li>
-      <li class="gcol"><span class="gicon"><img src="assets/work/peerup/g2-coin.webp" style="--ih:100" width="236" height="248" alt=""></span><p>Include feature dedicated pricing and purchase screens</p></li>
+      <li class="gcol"><span class="gicon"><img src="assets/work/peerup/g2-eyes.webp" style="--ih:84" width="292" height="240" alt=""></span><p>Introduce the app’s features &amp; values</p></li>
+      <li class="gcol"><span class="gicon"><img src="assets/work/peerup/g2-coin.webp" style="--ih:100" width="236" height="248" alt=""></span><p>Include feature dedicated pricing &amp; purchase screens</p></li>
       <li class="gcol"><span class="gicon"><img src="assets/work/peerup/g2-flow.webp" style="--ih:74" width="212" height="220" alt=""></span><p>Keep the flow short—5 to 7 screens max</p></li>
       <li class="gcol"><span class="gicon"><img src="assets/work/peerup/g2-sliders.webp" style="--ih:82" width="200" height="240" alt=""></span><p>Make onboarding feel personal to each user’s goals.</p></li>
     </ul>
@@ -520,7 +523,7 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
       </li>
       <li class="xc" style="--tilt:-3deg;--dy:24;--tape:#6cc0f5;--tape-r:-6deg;--p1:#eaf6ff;--p2:#bfe3fc;--ink:#1f6fae">
         <span class="xc-tape" aria-hidden="true"></span>
-        <div class="xc-in"><p class="xc-n">03</p><p class="xc-t">Use Miss Maya, our AI mentor and mascot, to show what the app offers.</p></div>
+        <div class="xc-in"><p class="xc-n">03</p><p class="xc-t">Use Miss Maya, our AI mentor &amp; mascot, to show what the app offers.</p></div>
       </li>
       <li class="xc" style="--tilt:5deg;--dy:-6;--tape:#4145b0;--tape-r:4deg;--p1:#e9e9fb;--p2:#bdbdf3;--ink:#2f3290">
         <span class="xc-tape" aria-hidden="true"></span>
@@ -541,7 +544,7 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
       <img class="a" style="--x:1011;--y:8459;--w:374" src="assets/work/peerup/e1-c.webp" width="748" height="1519" alt="Experiment 1: practise with AI characters card" loading="lazy">
       <img class="a" style="--x:1464;--y:8449;--w:374" src="assets/work/peerup/e1-d.webp" width="748" height="1518" alt="Experiment 1: beginner English course card" loading="lazy">
     </div>
-    <p class="a t sb" style="--x:108;--y:9321;--w:1692;--fs:36;--lh:47">Once the user has been asked about his lifestyle and day to day choices ,he is asked that what feature will excite him the most in a way that he is informed about the features as well as get information that what feature excites him the most .More information about the feature he selected is given to him</p>
+    <p class="a t sb" style="--x:108;--y:9321;--w:1692;--fs:36;--lh:47">Once the user has been asked about his lifestyle &amp; day to day choices ,he is asked that what feature will excite him the most in a way that he is informed about the features as well as get information that what feature excites him the most .More information about the feature he selected is given to him</p>
     <p class="a t b" style="--x:118;--y:9580;--w:1500;--fs:36;--lh:40;font-style:italic">Experiment&nbsp; 2 was not carried out because that was not fulfilling our innate principals</p>
 
     <h3 class="a t b h-sm" style="--x:118;--y:9752;--w:997;--fs:60;--lh:40">Experiment 3</h3>
@@ -553,7 +556,7 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
     </div>
 
     <h3 class="a t b h-sm" style="--x:119;--y:10845;--w:1645;--fs:60;--lh:40">Experiment 4</h3>
-    <p class="a t rg" style="--x:119;--y:10901;--w:1573;--fs:34;--lh:40">Initiating a call before the onboarding ends so&nbsp; that people can be activated and have a feel of the the app before they reach the home page.</p>
+    <p class="a t rg" style="--x:119;--y:10901;--w:1573;--fs:34;--lh:40">Initiating a call before the onboarding ends so&nbsp; that people can be activated &amp; have a feel of the the app before they reach the home page.</p>
     <div class="row">
       <img class="a" style="--x:144;--y:11079;--w:421" src="assets/work/peerup/e4-a.webp" width="842" height="1662" alt="Experiment 4: AI call begins during onboarding" loading="lazy">
       <img class="a" style="--x:699;--y:11079;--w:421" src="assets/work/peerup/e4-b.webp" width="842" height="1662" alt="Experiment 4: user's turn to speak" loading="lazy">
@@ -588,7 +591,7 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
   <section class="sec" aria-labelledby="ch-h">
     <h2 id="ch-h" class="a t b h-mid" style="--x:118;--y:14777;--w:700;--fs:64;--lh:40">Changes in between</h2>
     <h3 class="a t b h-sm" style="--x:124;--y:14901;--w:400;--fs:36;--lh:40">Icon Changes</h3>
-    <p class="a t rg" style="--x:123;--y:14954;--w:1687;--fs:30;--lh:40">The icons lacked visual appeal, the heavy purple made the screens look dull. After reviewing competitor apps, we switched to colored icons to add liveliness and improve contrast.</p>
+    <p class="a t rg" style="--x:123;--y:14954;--w:1687;--fs:30;--lh:40">The icons lacked visual appeal, the heavy purple made the screens look dull. After reviewing competitor apps, we switched to colored icons to add liveliness &amp; improve contrast.</p>
     <div class="stage fit" style="--sox:170;--soy:15255;--sw:1560;--sh:560;--mu:calc((100cqw - 48px) / 1560)">
       <div class="inner">
         <img class="a" style="--x:182;--y:15359;--w:196" src="assets/work/peerup/c-s1.webp" width="393" height="833" alt="" loading="lazy">
