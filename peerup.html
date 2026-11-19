@@ -24,7 +24,8 @@
 /* Proxima Nova, self-hosted */
 @font-face { font-family: 'Proxima Nova Site'; font-weight: 300; font-display: swap; src: url('assets/fonts/ProximaNova-Light.ttf') format('truetype'); }
 @font-face { font-family: 'Proxima Nova Site'; font-weight: 400; font-display: swap; src: url('assets/fonts/ProximaNova-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'Proxima Nova Site'; font-weight: 500 600; font-display: swap; src: url('assets/fonts/ProximaNova-Semibold.ttf') format('truetype'); }
+@font-face { font-family: 'Proxima Nova Site'; font-weight: 500; font-display: swap; src: url('assets/fonts/ProximaNova-Medium.otf') format('opentype'); }
+@font-face { font-family: 'Proxima Nova Site'; font-weight: 600; font-display: swap; src: url('assets/fonts/ProximaNova-Semibold.ttf') format('truetype'); }
 @font-face { font-family: 'Proxima Nova Site'; font-weight: 700 800; font-display: swap; src: url('assets/fonts/ProximaNova-Bold.ttf') format('truetype'); }
 @font-face { font-family: 'Clash Display'; font-weight: 600; font-display: swap; src: url('assets/fonts/ClashDisplay-Semibold.otf') format('opentype'); }
 /*
@@ -174,7 +175,7 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
 .label { font-size: calc(16 * var(--u)); font-weight: 600; white-space: nowrap; }
 
 /* ---------- Problems / goals ---------- */
-.list { list-style: none; padding: 0; font-weight: 600; }
+.list { list-style: none; padding: 0; font-weight: 500; }
 .list li { position: relative; padding-left: calc(55 * var(--u)); margin-bottom: calc(45 * var(--u)); }
 .list li::before { content: '•'; position: absolute; left: calc(20 * var(--u)); }
 .hl { color: var(--accent); }
@@ -182,6 +183,22 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
   height: calc(1 * var(--u)); min-height: 1px;
   background: linear-gradient(90deg, rgba(255, 255, 255, .31), rgba(63, 59, 59, .91) 41%, rgba(255, 255, 255, .24));
 }
+/* goals: four columns under one hairline, split by fading vertical lines */
+.goal-grid { z-index: 3; list-style: none; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); }
+.goal-grid::before {
+  content: ''; position: absolute; left: 0; right: 0; top: 0; height: max(1px, calc(1.5 * var(--u)));
+  background: linear-gradient(90deg, rgba(63, 59, 59, .1), rgba(63, 59, 59, .5) 30%, rgba(63, 59, 59, .5) 70%, rgba(63, 59, 59, .1));
+}
+.gcol { position: relative; padding: calc(96 * var(--u)) calc(44 * var(--u)) calc(30 * var(--u)); }
+.gcol:first-child { padding-left: 0; }
+.gcol + .gcol::before {
+  content: ''; position: absolute; left: 0; top: calc(80 * var(--u)); bottom: 0; width: max(1px, calc(1.5 * var(--u)));
+  background: linear-gradient(180deg, rgba(63, 59, 59, 0), rgba(63, 59, 59, .45) 30%, rgba(63, 59, 59, .45) 70%, rgba(63, 59, 59, 0));
+}
+/* every icon sits in the same square slot (64px at 1440 wide), sized so they look equally heavy */
+.gicon { display: flex; align-items: center; justify-content: flex-start; width: calc(85 * var(--u)); height: calc(85 * var(--u)); margin-bottom: calc(34 * var(--u)); }
+.gicon img { display: block; height: calc(var(--ih) * 1%); width: auto; max-width: 100%; object-fit: contain; }
+.gcol p { margin: 0; font-size: calc(34 * var(--u)); line-height: 1.3; font-weight: 500; letter-spacing: -.01em; }
 
 /* ---------- Experiments: taped cards in the case study's violet, pink, blue and deep purple ---------- */
 .xcards { z-index: 3; list-style: none; padding: 0; display: flex; justify-content: space-between; align-items: flex-start; }
@@ -197,7 +214,7 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
   border-radius: calc(30 * var(--u)); background: linear-gradient(160deg, var(--p1), var(--p2));
 }
 .xc-n { margin: 0; font-family: 'Clash Display', 'Unbounded', sans-serif; font-weight: 600; font-size: calc(78 * var(--u)); line-height: 1; color: var(--ink); }
-.xc-t { margin: 0; font-size: calc(29 * var(--u)); line-height: 1.4; font-weight: 500; color: rgba(0, 0, 0, .78); }
+.xc-t { margin: 0; font-size: calc(29 * var(--u)); line-height: 1.4; font-weight: 600; color: rgba(0, 0, 0, .78); }
 .xc-t b { font-weight: 700; }
 /* a strip of tape holding each card up, torn at the ends */
 .xc-tape {
@@ -308,12 +325,18 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
   .imp-row { gap: 12px; margin-top: 30px; }
   .imp-conv { margin-top: 28px; }
 
+  .list { margin-top: 24px !important; }
   .list li { padding-left: 22px; margin-bottom: 14px; }
   .list li::before { left: 4px; }
-  .goals { display: grid; gap: 26px; margin-top: 24px; }
-  .goal { display: grid !important; gap: 10px; }
-  .goal .ic, .goal img { position: static; width: 52px !important; }
-  .goal .rule { position: static; width: 60% !important; }
+  .goal-grid { grid-template-columns: 1fr 1fr; margin-top: 24px; }
+  .goal-grid::before { height: 1px; }
+  .gcol { padding: 24px 14px 22px; }
+  .gcol:nth-child(odd) { padding-left: 0; }
+  .gcol + .gcol::before { top: 18px; width: 1px; }
+  .gcol:nth-child(3)::before { display: none; }
+  .gcol:nth-child(n+3) { border-top: 1px solid rgba(63, 59, 59, .25); }
+  .gicon { width: 44px; height: 44px; margin-bottom: 12px; }
+  .gcol p { font-size: 15px; }
   .num-grid { display: grid !important; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
   .num-grid > .a { width: 100%; }
   .flow-grid { display: grid !important; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 20px; }
@@ -458,7 +481,7 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
   <!-- ===== Problems ===== -->
   <section class="sec" aria-labelledby="pr-h">
     <h2 id="pr-h" class="a t b h-big" style="--x:101;--y:5579;--w:1000;--fs:100;--lh:40">Problems Identified</h2>
-    <ul class="a t list" style="--x:97;--y:5720;--w:1422;--fs:37;--lh:45">
+    <ul class="a t list" style="--x:97;--y:5742;--w:1422;--fs:37;--lh:45">
       <li><span class="hl">17% of users dropped off right after finishing onboarding.</span></li>
       <li>PeerUp is built around speaking, but onboarding never made that clear.</li>
       <li>Onboarding asked a lot of questions but gave users nothing to interact with or learn in return.</li>
@@ -469,28 +492,12 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
   <!-- ===== Goals ===== -->
   <section class="sec" aria-labelledby="go-h">
     <h2 id="go-h" class="a t b h-big" style="--x:116;--y:6234;--w:900;--fs:100;--lh:40">Goals to work on</h2>
-    <div class="goals">
-      <div class="goal" style="display:contents">
-        <img class="a" style="--x:116;--y:6388;--w:73" src="assets/work/peerup/g2-eyes.webp" width="292" height="240" alt="">
-        <p class="a t sb" style="--x:116;--y:6494;--w:700;--fs:35;--lh:40">Introduce the apps features and values</p>
-        <div class="a rule" style="--x:116;--y:6550;--w:370"></div>
-      </div>
-      <div class="goal" style="display:contents">
-        <img class="a" style="--x:934;--y:6387;--w:59" src="assets/work/peerup/g2-coin.webp" width="236" height="248" alt="">
-        <p class="a t sb" style="--x:932;--y:6493;--w:958;--fs:35;--lh:43">Include feature dedicated pricing and purchase screens</p>
-        <div class="a rule" style="--x:1213;--y:6553;--w:396"></div>
-      </div>
-      <div class="goal" style="display:contents">
-        <img class="a" style="--x:113;--y:6678;--w:53" src="assets/work/peerup/g2-flow.webp" width="212" height="220" alt="">
-        <p class="a t sb" style="--x:116;--y:6759;--w:700;--fs:35;--lh:40">Keep the flow short—5 to 7 screens max</p>
-        <div class="a rule" style="--x:259;--y:6815;--w:370"></div>
-      </div>
-      <div class="goal" style="display:contents">
-        <img class="a" style="--x:934;--y:6675;--w:50" src="assets/work/peerup/g2-sliders.webp" width="200" height="240" alt="">
-        <p class="a t sb" style="--x:931;--y:6755;--w:900;--fs:36;--lh:40">Make onboarding feel personal to each user’s goals.</p>
-        <div class="a rule" style="--x:1172;--y:6811;--w:370"></div>
-      </div>
-    </div>
+    <ul class="a goal-grid" style="--x:116;--y:6400;--w:1690">
+      <li class="gcol"><span class="gicon"><img src="assets/work/peerup/g2-eyes.webp" style="--ih:84" width="292" height="240" alt=""></span><p>Introduce the apps features and values</p></li>
+      <li class="gcol"><span class="gicon"><img src="assets/work/peerup/g2-coin.webp" style="--ih:100" width="236" height="248" alt=""></span><p>Include feature dedicated pricing and purchase screens</p></li>
+      <li class="gcol"><span class="gicon"><img src="assets/work/peerup/g2-flow.webp" style="--ih:74" width="212" height="220" alt=""></span><p>Keep the flow short—5 to 7 screens max</p></li>
+      <li class="gcol"><span class="gicon"><img src="assets/work/peerup/g2-sliders.webp" style="--ih:82" width="200" height="240" alt=""></span><p>Make onboarding feel personal to each user’s goals.</p></li>
+    </ul>
   </section>
 
   <!-- ===== Experiments ===== -->
