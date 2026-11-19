@@ -199,6 +199,9 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
 .gicon { display: flex; align-items: center; justify-content: flex-start; width: calc(85 * var(--u)); height: calc(85 * var(--u)); margin-bottom: calc(34 * var(--u)); }
 .gicon img { display: block; height: calc(var(--ih) * 1%); width: auto; max-width: 100%; object-fit: contain; }
 .gcol p { margin: 0; font-size: calc(34 * var(--u)); line-height: 1.3; font-weight: 500; letter-spacing: -.01em; }
+/* problems use the same columns as the goals, without icons */
+.prob-cols .gcol { padding-top: calc(64 * var(--u)); }
+.prob-cols .gcol + .gcol::before { top: calc(48 * var(--u)); }
 
 /* ---------- Experiments: taped cards in the case study's violet, pink, blue and deep purple ---------- */
 .xcards { z-index: 3; list-style: none; padding: 0; display: flex; justify-content: space-between; align-items: flex-start; }
@@ -481,11 +484,11 @@ h1.a, h2.a, h3.a { white-space: nowrap; }
   <!-- ===== Problems ===== -->
   <section class="sec" aria-labelledby="pr-h">
     <h2 id="pr-h" class="a t b h-big" style="--x:101;--y:5579;--w:1000;--fs:100;--lh:40">Problems Identified</h2>
-    <ul class="a t list" style="--x:97;--y:5742;--w:1422;--fs:37;--lh:45">
-      <li><span class="hl">17% of users dropped off right after finishing onboarding.</span></li>
-      <li>PeerUp is built around speaking, but onboarding never made that clear.</li>
-      <li>Onboarding asked a lot of questions but gave users nothing to interact with or learn in return.</li>
-      <li>The home screen offered many options but no clear first step.</li>
+    <ul class="a goal-grid prob-cols" style="--x:116;--y:5742;--w:1690">
+      <li class="gcol"><p class="hl">17% of users dropped off right after finishing onboarding.</p></li>
+      <li class="gcol"><p>PeerUp is built around speaking, but onboarding never made that clear.</p></li>
+      <li class="gcol"><p>Onboarding asked a lot of questions but gave users nothing to interact with or learn in return.</p></li>
+      <li class="gcol"><p>The home screen offered many options but no clear first step.</p></li>
     </ul>
   </section>
 
